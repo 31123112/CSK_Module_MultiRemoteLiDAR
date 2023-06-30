@@ -1,0 +1,13 @@
+.myCustomFrame_CSK_Module_MultiRemoteLiDAR {
+  border-style: solid;
+  border-width: 1px;
+  border-color: grey;
+  margin: 6px;
+}
+
+.myCustomMinHeight10px_CSK_Module_MultiRemoteLiDAR {
+  min-height: 10px
+}
+
+.myCustomCssClass_CSK_Module_MultiRemoteLiDAR {
+}
