@@ -1,189 +1,198 @@
-<layout-row id="RowLayout1" style="align-items: stretch">
-    <layout-column id="ColumnLayout1" style="align-items: stretch">
-        <davinci-drop-down id="DropDown1">
-            <davinci-option id="Option7" value="Scan">
-                <span>Scan</span>
-            </davinci-option>
-            <davinci-option id="Option8" value="PointCloud">
-                <span>PointCloud</span>
-            </davinci-option>
-            <crown-edpws-binding property="value" name="CSK_MultiRemoteLiDAR/OnNewStatusViewerType" update-on-resume>
-            </crown-edpws-binding>
-            <crown-binding event="change" name="CSK_MultiRemoteLiDAR/setViewerType" path="param/args/viewerType"
-                auto-commit>
-            </crown-binding>
-        </davinci-drop-down>
-        <stacked-view id="SV_ViewerType" style="flex-grow: 1">
-            <stacked-pane id="SP_PointCloud" value="PointCloud" style="flex-grow: 1; height: 100%">
-                <sick-viewer3d id="Viewer3D" style="width: 100%; height: 100%; flex-grow: 1">
-                </sick-viewer3d>
-            </stacked-pane>
-            <stacked-pane id="SP_ScanViewer" value="Scan" style="flex-grow: 1; width: 99%; height: 99%">
-                <layout-row id="RowLayout14" style="align-items: stretch; height: 100%">
-                    <layout-column id="ColumnLayout14" style="align-items: stretch">
-                        <stacked-view id="StackedView1" style="flex-grow: 1">
-                            <stacked-pane id="StackedPane1" value="multiRemoteLiDARScanViewer1"
-                                style="height: 99%; width: 99%; flex-grow: 1">
-                                <davinci-scan-viewer-as id="ScanViewerAS1" grid-size="10000" grid-font-size="50"
-                                    background-color="0xffffff" shape-editor="bounding-box"
-                                    viewer-id="multiRemoteLiDARScanViewer1" style="width: 99%; height: 99%">
-                                    <crown-edpws-binding property="viewer-id"
-                                        name="CSK_MultiRemoteLiDAR/OnNewScanViewerID" update-on-resume>
-                                    </crown-edpws-binding>
-                                </davinci-scan-viewer-as>
-                            </stacked-pane>
-                            <stacked-pane id="StackedPane2" value="multiRemoteLiDARScanViewer2"
-                                style="width: 99%; height: 99%; flex-grow: 1">
-                                <davinci-scan-viewer-as id="ScanViewerAS2" grid-size="10000" grid-font-size="50"
-                                    background-color="0xffffff" shape-editor="bounding-box"
-                                    viewer-id="multiRemoteLiDARScanViewer2" style="width: 99%; height: 99%">
-                                    <crown-edpws-binding property="viewer-id"
-                                        name="CSK_MultiRemoteLiDAR/OnNewScanViewerID" update-on-resume>
-                                    </crown-edpws-binding>
-                                </davinci-scan-viewer-as>
-                            </stacked-pane>
-                            <crown-edpws-binding property="value" name="CSK_MultiRemoteLiDAR/OnNewScanViewerID"
-                                update-on-resume>
-                            </crown-edpws-binding>
-                        </stacked-view>
-                    </layout-column>
-                </layout-row>
-            </stacked-pane>
-            <crown-edpws-binding property="value" name="CSK_MultiRemoteLiDAR/OnNewStatusViewerType" update-on-resume>
-            </crown-edpws-binding>
-        </stacked-view>
-    </layout-column>
-    <layout-column id="ColumnLayout2" style="align-items: stretch">
-        <stacked-view id="SV_UserRole" style="flex-grow: 1">
-            <stacked-pane id="Active_StackedPane1" value="true" style="flex-grow: 1">
-                <layout-row id="RowLayout5">
-                    <layout-column id="ColumnLayout7" style="align-items: stretch">
-                        <davinci-tabs id="Tabs_Setup_Instances" type="modern">
-                            <davinci-tab id="Tab_Setup" label="Setup">
-                                <layout-row id="RowLayout8" style="justify-content: space-between">
-                                    <layout-column id="ColumnLayout9"
-                                        style="align-items: stretch; justify-content: space-between">
-                                        <layout-row id="RowLayout10">
-                                            <layout-column id="ColumnLayout10" style="align-items: stretch">
-                                                <layout-row id="RowLayout11"
-                                                    style="justify-content: space-between; align-items: center">
-                                                    <layout-column id="ColumnLayout33" style="align-items: stretch">
-                                                        <davinci-value-display id="VD_SelectInstance"
-                                                            value="Selected instance:">
-                                                        </davinci-value-display>
-                                                    </layout-column>
-                                                    <layout-column id="ColumnLayout22" style="align-items: stretch">
-                                                        <davinci-drop-down id="DD_SelectInstance">
-                                                            <crown-binding event="change"
-                                                                name="CSK_MultiRemoteLiDAR/setSelectedInstance"
-                                                                path="param/args/instance" auto-commit
-                                                                converter="function(value) {return Number(value);}">
-                                                            </crown-binding>
-                                                            <crown-edpws-binding property="value"
-                                                                name="CSK_MultiRemoteLiDAR/OnNewSelectedInstance"
-                                                                update-on-resume
-                                                                converter="function(value) {return value.toString();}">
-                                                            </crown-edpws-binding>
-                                                            <crown-edpws-binding property="data"
-                                                                name="CSK_MultiRemoteLiDAR/OnNewInstanceList"
-                                                                update-on-resume converter="convertToList">
-                                                            </crown-edpws-binding>
-                                                        </davinci-drop-down>
-                                                    </layout-column>
-                                                </layout-row>
-                                                <davinci-drop-down id="DropDown_Interface">
-                                                    <davinci-option id="Option_Interface" value="ETHERNET">
-                                                        <span>ETHERNET</span>
-                                                    </davinci-option>
-                                                    <davinci-option id="Option1" value="SERIAL">
-                                                        <span>SERIAL</span>
-                                                    </davinci-option>
-                                                    <crown-edpws-binding property="value"
-                                                        name="CSK_MultiRemoteLiDAR/OnNewStatusInterface"
-                                                        update-on-resume>
-                                                    </crown-edpws-binding>
-                                                    <crown-binding event="change"
-                                                        name="CSK_MultiRemoteLiDAR/setInterface"
-                                                        path="param/args/interface" auto-commit>
-                                                    </crown-binding>
-                                                </davinci-drop-down>
-                                                <stacked-view id="SV_Interface">
-                                                    <stacked-pane id="SP_EthernetActive" value="ETHERNET">
-                                                        <layout-column id="ColumnLayout13" style="align-items: stretch">
-                                                            <davinci-text-field id="TF_SensorIP" type="text" label="IP"
-                                                                style="align-self: stretch">
-                                                                <crown-edpws-binding property="value"
-                                                                    name="CSK_MultiRemoteLiDAR/OnNewStatusSensorIP"
-                                                                    update-on-resume>
-                                                                </crown-edpws-binding>
-                                                                <crown-binding event="change"
-                                                                    name="CSK_MultiRemoteLiDAR/setIP"
-                                                                    path="param/args/ip" auto-commit>
-                                                                </crown-binding>
-                                                                <crown-edpws-binding property="error"
-                                                                    name="CSK_MultiRemoteLiDAR/OnNewStatusIPError"
-                                                                    update-on-resume>
-                                                                </crown-edpws-binding>
-                                                            </davinci-text-field>
-                                                        </layout-column>
-                                                    </stacked-pane>
-                                                    <stacked-pane id="SP_Serial" value="SERIAL">
-                                                    </stacked-pane>
-                                                    <crown-edpws-binding property="value"
-                                                        name="CSK_MultiRemoteLiDAR/OnNewStatusInterface"
-                                                        update-on-resume>
-                                                    </crown-edpws-binding>
-                                                </stacked-view>
-                                                <davinci-drop-down id="DD_SensorType" label="Sensor type">
-                                                    <davinci-option id="Option_LMSx00" value="LMSX00">
-                                                        <span>LMSX00</span>
-                                                    </davinci-option>
-                                                    <davinci-option id="Option5" value="LMS400">
-                                                        <span>LMS400</span>
-                                                    </davinci-option>
-                                                    <davinci-option id="Option4" value="LMS4XXX">
-                                                        <span>LMS4XXX</span>
-                                                    </davinci-option>
-                                                    <davinci-option id="Option9" value="LD_MRS">
-                                                        <span>LD_MRS</span>
-                                                    </davinci-option>
-                                                    <davinci-option id="Option10" value="MRS1000">
-                                                        <span>MRS1000</span>
-                                                    </davinci-option>
-                                                    <davinci-option id="Option3" value="S300">
-                                                        <span>S300</span>
-                                                    </davinci-option>
-                                                    <davinci-option id="Option2" value="MICRO_SCAN">
-                                                        <span>MICRO_SCAN</span>
-                                                    </davinci-option>
-                                                    <davinci-option id="Option6" value="NO_SENSOR">
-                                                        <span>NO_SENSOR</span>
-                                                    </davinci-option>
-                                                    <crown-edpws-binding property="value"
-                                                        name="CSK_MultiRemoteLiDAR/OnNewStatusSensorType"
-                                                        update-on-resume>
-                                                    </crown-edpws-binding>
-                                                    <crown-binding event="change"
-                                                        name="CSK_MultiRemoteLiDAR/setSensorType"
-                                                        path="param/args/sensorType" auto-commit>
-                                                    </crown-binding>
-                                                </davinci-drop-down>
-                                                <layout-row id="RowLayout12"
-                                                    style="justify-content: space-between; align-items: center">
-                                                    <davinci-value-display id="VD_InternalProcessing"
-                                                        value="Internal processing:">
-                                                    </davinci-value-display>
-                                                    <davinci-toggle-switch id="TS_InternalProcessing">
-                                                        <crown-edpws-binding property="checked"
-                                                            name="CSK_MultiRemoteLiDAR/OnNewStatusInternalProcessing"
-                                                            update-on-resume>
-                                                        </crown-edpws-binding>
-                                                        <crown-binding event="change"
-                                                            name="CSK_MultiRemoteLiDAR/setInternalProcessing"
-                                                            path="param/args/status" auto-commit>
-                                                        </crown-binding>
-                                                    </davinci-toggle-switch>
-                                                </layout-row>
+<layout-row id="RowLayout1"
+	class="myCustomFrame_CSK_Module_MultiRemoteLiDAR"
+	style="align-items: stretch">
+	<layout-column id="ColumnLayout1" style="align-items: stretch">
+		<davinci-drop-down id="DropDown1">
+			<davinci-option id="Option7" value="Scan">
+				<span>Scan</span>
+			</davinci-option>
+			<davinci-option id="Option8" value="PointCloud">
+				<span>PointCloud</span>
+			</davinci-option>
+			<crown-edpws-binding property="value"
+				name="CSK_MultiRemoteLiDAR/OnNewStatusViewerType"
+				update-on-resume>
+			</crown-edpws-binding>
+			<crown-binding event="change"
+				name="CSK_MultiRemoteLiDAR/setViewerType"
+				path="param/args/viewerType" auto-commit>
+			</crown-binding>
+		</davinci-drop-down>
+		<stacked-view id="SV_ViewerType" style="flex-grow: 1">
+			<stacked-pane id="SP_PointCloud" value="PointCloud"
+				style="flex-grow: 1; height: 100%">
+				<sick-viewer3d id="Viewer3D"
+					style="width: 100%; height: 100%; flex-grow: 1">
+				</sick-viewer3d>
+			</stacked-pane>
+			<stacked-pane id="SP_ScanViewer" value="Scan"
+				style="flex-grow: 1; width: 99%; height: 99%">
+				<layout-row id="RowLayout14"
+					style="align-items: stretch; height: 100%">
+					<layout-column id="ColumnLayout14" style="align-items: stretch">
+						<stacked-view id="StackedView1" style="flex-grow: 1">
+							<stacked-pane id="StackedPane1" value="multiRemoteLiDARScanViewer1"
+								style="height: 99%; width: 99%; flex-grow: 1">
+								<davinci-scan-viewer-as id="ScanViewerAS1" grid-size="10000"
+									grid-font-size="50" background-color="0xffffff"
+									shape-editor="bounding-box"
+									viewer-id="multiRemoteLiDARScanViewer1"
+									style="width: 99%; height: 99%">
+									<crown-edpws-binding property="viewer-id"
+										name="CSK_MultiRemoteLiDAR/OnNewScanViewerId" update-on-resume>
+									</crown-edpws-binding>
+								</davinci-scan-viewer-as>
+							</stacked-pane>
+							<stacked-pane id="StackedPane2" value="multiRemoteLiDARScanViewer2"
+								style="width: 99%; height: 99%; flex-grow: 1">
+								<davinci-scan-viewer-as id="ScanViewerAS2" grid-size="10000"
+									grid-font-size="50" background-color="0xffffff"
+									shape-editor="bounding-box"
+									viewer-id="multiRemoteLiDARScanViewer2"
+									style="width: 99%; height: 99%">
+									<crown-edpws-binding property="viewer-id"
+										name="CSK_MultiRemoteLiDAR/OnNewScanViewerId" update-on-resume>
+									</crown-edpws-binding>
+								</davinci-scan-viewer-as>
+							</stacked-pane>
+							<crown-edpws-binding property="value"
+								name="CSK_MultiRemoteLiDAR/OnNewScanViewerId" update-on-resume>
+							</crown-edpws-binding>
+						</stacked-view>
+					</layout-column>
+				</layout-row>
+			</stacked-pane>
+			<crown-edpws-binding property="value"
+				name="CSK_MultiRemoteLiDAR/OnNewStatusViewerType"
+				update-on-resume>
+			</crown-edpws-binding>
+		</stacked-view>
+	</layout-column>
+	<layout-column id="ColumnLayout2" style="align-items: stretch">
+		<stacked-view id="SV_UserRole" style="flex-grow: 1">
+			<stacked-pane id="Active_StackedPane1" value="true"
+				style="flex-grow: 1">
+				<layout-row id="RowLayout5">
+					<layout-column id="ColumnLayout7" style="align-items: stretch">
+						<davinci-tabs id="Tabs_Setup_Instances" type="modern">
+							<davinci-tab id="Tab_Setup" label="Setup">
+								<layout-row id="RowLayout8" style="justify-content: space-between">
+									<layout-column id="ColumnLayout9"
+										style="align-items: stretch; justify-content: space-between">
+										<layout-row id="RowLayout10">
+											<layout-column id="ColumnLayout10" style="align-items: stretch">
+												<layout-row id="RowLayout11"
+													style="justify-content: space-between; align-items: center">
+												<layout-column id="ColumnLayout33" style="align-items: stretch">
+												<davinci-value-display id="VD_SelectInstance"
+													value="Selected instance:">
+												</davinci-value-display>
+												</layout-column>
+												<layout-column id="ColumnLayout22" style="align-items: stretch">
+												<davinci-drop-down id="DD_SelectInstance">
+												<crown-binding event="change"
+													name="CSK_MultiRemoteLiDAR/setSelectedInstance"
+													path="param/args/instance" auto-commit
+													converter="function(value) {return Number(value);}">
+												</crown-binding>
+												<crown-edpws-binding property="value"
+													name="CSK_MultiRemoteLiDAR/OnNewSelectedInstance" update-on-resume
+													converter="function(value) {return value.toString();}">
+												</crown-edpws-binding>
+												<crown-edpws-binding property="data"
+													name="CSK_MultiRemoteLiDAR/OnNewInstanceList" update-on-resume
+													converter="convertToList">
+												</crown-edpws-binding>
+												</davinci-drop-down>
+												</layout-column>
+												</layout-row>
+												<davinci-drop-down id="DropDown_Interface">
+												<davinci-option id="Option_Interface" value="ETHERNET">
+												<span>ETHERNET</span>
+												</davinci-option>
+												<davinci-option id="Option1" value="SERIAL">
+												<span>SERIAL</span>
+												</davinci-option>
+												<crown-edpws-binding property="value"
+													name="CSK_MultiRemoteLiDAR/OnNewStatusInterface" update-on-resume>
+												</crown-edpws-binding>
+												<crown-binding event="change" name="CSK_MultiRemoteLiDAR/setInterface"
+													path="param/args/interface" auto-commit>
+												</crown-binding>
+												</davinci-drop-down>
+												<stacked-view id="SV_Interface">
+												<stacked-pane id="SP_EthernetActive" value="ETHERNET">
+												<layout-column id="ColumnLayout13" style="align-items: stretch">
+												<davinci-text-field id="TF_SensorIP" type="text" label="IP"
+													style="align-self: stretch">
+												<crown-edpws-binding property="value"
+													name="CSK_MultiRemoteLiDAR/OnNewStatusSensorIp" update-on-resume>
+												</crown-edpws-binding>
+												<crown-binding event="change" name="CSK_MultiRemoteLiDAR/setIp"
+													path="param/args/ip" auto-commit>
+												</crown-binding>
+												<crown-edpws-binding property="error"
+													name="CSK_MultiRemoteLiDAR/OnNewStatusIpError" update-on-resume>
+												</crown-edpws-binding>
+												</davinci-text-field>
+												</layout-column>
+												</stacked-pane>
+												<stacked-pane id="SP_Serial" value="SERIAL">
+												</stacked-pane>
+												<crown-edpws-binding property="value"
+													name="CSK_MultiRemoteLiDAR/OnNewStatusInterface" update-on-resume>
+												</crown-edpws-binding>
+												</stacked-view>
+												<davinci-drop-down id="DD_SensorType" label="Sensor type">
+												<davinci-option id="Option_LMSx00" value="LMSX00">
+												<span>LMSX00</span>
+												</davinci-option>
+												<davinci-option id="Option5" value="LMS400">
+												<span>LMS400</span>
+												</davinci-option>
+												<davinci-option id="Option4" value="LMS4XXX">
+												<span>LMS4XXX</span>
+												</davinci-option>
+												<davinci-option id="Option9" value="LD_MRS">
+												<span>LD_MRS</span>
+												</davinci-option>
+												<davinci-option id="Option10" value="MRS1000">
+												<span>MRS1000</span>
+												</davinci-option>
+												<davinci-option id="Option3" value="S300">
+												<span>S300</span>
+												</davinci-option>
+												<davinci-option id="Option2" value="MICRO_SCAN">
+												<span>MICRO_SCAN</span>
+												</davinci-option>
+												<davinci-option id="Option6" value="NO_SENSOR">
+												<span>NO_SENSOR</span>
+												</davinci-option>
+												<crown-edpws-binding property="value"
+													name="CSK_MultiRemoteLiDAR/OnNewStatusSensorType"
+													update-on-resume>
+												</crown-edpws-binding>
+												<crown-binding event="change"
+													name="CSK_MultiRemoteLiDAR/setSensorType"
+													path="param/args/sensorType" auto-commit>
+												</crown-binding>
+												</davinci-drop-down>
+												<layout-row id="RowLayout12"
+													style="justify-content: space-between; align-items: center">
+												<davinci-value-display id="VD_InternalProcessing"
+													value="Internal processing:">
+												</davinci-value-display>
+												<davinci-toggle-switch id="TS_InternalProcessing">
+												<crown-edpws-binding property="checked"
+													name="CSK_MultiRemoteLiDAR/OnNewStatusInternalProcessing"
+													update-on-resume>
+												</crown-edpws-binding>
+												<crown-binding event="change"
+													name="CSK_MultiRemoteLiDAR/setInternalProcessing"
+													path="param/args/status" auto-commit>
+												</crown-binding>
+												</davinci-toggle-switch>
+												</layout-row>
 												<layout-row id="Placeholder2"
 													class="myCustomMinHeight10px_CSK_Module_MultiRemoteLiDAR">
 												</layout-row>
@@ -202,122 +211,363 @@
 												</crown-binding>
 												</davinci-toggle-switch>
 												</layout-row>
-                                                <layout-row id="RowLayout7">
-                                                    <layout-column id="ColumnLayout8" style="align-items: stretch">
-                                                        <davinci-button id="Button_StartLiDAR" type="primary"
-                                                            icon-position="append">
-                                                            <span>StartLiDAR</span>
-                                                            <crown-binding event="submit"
-                                                                name="CSK_MultiRemoteLiDAR/startLiDARSensor"
-                                                                auto-commit>
-                                                            </crown-binding>
-                                                        </davinci-button>
-                                                    </layout-column>
-                                                    <layout-column id="ColumnLayout11" style="align-items: stretch">
-                                                        <davinci-button id="Button_StopLiDAR" type="primary"
-                                                            icon-position="append">
-                                                            <span>StopLiDAR</span>
-                                                            <crown-binding event="submit"
-                                                                name="CSK_MultiRemoteLiDAR/stopLiDARSensor" auto-commit>
-                                                            </crown-binding>
-                                                        </davinci-button>
-                                                    </layout-column>
-                                                </layout-row>
-                                            </layout-column>
-                                        </layout-row>
-                                        <layout-row id="RowLayout9" style="align-items: flex-end">
-                                            <layout-column id="Column_PersistentData"
-                                                class="myCustomFrame_CSK_Module_MultiRemoteLiDAR"
-                                                style="align-items: stretch">
-                                                <layout-row id="RowLayout4"
-                                                    style="justify-content: space-between; align-items: center">
-                                                    <layout-column id="ColumnLayout5" style="align-items: stretch">
-                                                        <davinci-value-display id="VD_ParameterName"
-                                                            value="Parameter name:"
-                                                            title="Name of the parameters within the CSK_PersistentData module to be uses for this module.">
-                                                        </davinci-value-display>
-                                                    </layout-column>
-                                                    <layout-column id="ColumnLayout6" style="align-items: stretch">
-                                                        <davinci-text-field id="TF_ParameterName" type="text"
-                                                            title="Name of the parameters within the CSK_PersistentData module to be uses for this module.">
-                                                            <crown-edpws-binding property="value"
-                                                                name="CSK_MultiRemoteLiDAR/OnNewParameterName"
-                                                                update-on-resume>
-                                                            </crown-edpws-binding>
-                                                            <crown-binding event="change"
-                                                                name="CSK_MultiRemoteLiDAR/setParameterName"
-                                                                path="param/args/name" auto-commit>
-                                                            </crown-binding>
-                                                            <crown-edpws-binding property="disabled"
-                                                                name="CSK_MultiRemoteLiDAR/OnPersistentDataModuleAvailable"
-                                                                update-on-resume
-                                                                converter="function(value) {return !value;}">
-                                                            </crown-edpws-binding>
-                                                        </davinci-text-field>
-                                                    </layout-column>
-                                                </layout-row>
-                                                <layout-row id="RowLayout2"
-                                                    style="justify-content: space-between; align-items: center">
-                                                    <davinci-value-display id="VD_LoadConfig"
-                                                        value="Load config on app start:"
-                                                        title="Load configured parameters from CSK_PersistentData on app start.">
-                                                    </davinci-value-display>
-                                                    <davinci-checkbox id="CB_LoadConfig"
-                                                        title="Load configured parameters from CSK_PersistentData on app start.">
-                                                        <span></span>
-                                                        <crown-edpws-binding property="checked"
-                                                            name="CSK_MultiRemoteLiDAR/OnNewStatusLoadParameterOnReboot"
-                                                            update-on-resume>
-                                                        </crown-edpws-binding>
-                                                        <crown-edpws-binding property="disabled"
-                                                            name="CSK_MultiRemoteLiDAR/OnPersistentDataModuleAvailable"
-                                                            update-on-resume
-                                                            converter="function(value) {return !value;}">
-                                                        </crown-edpws-binding>
-                                                        <crown-binding event="change"
-                                                            name="CSK_MultiRemoteLiDAR/setLoadOnReboot"
-                                                            path="param/args/status" auto-commit>
-                                                        </crown-binding>
-                                                    </davinci-checkbox>
-                                                </layout-row>
-                                                <layout-row id="RowLayout3">
-                                                    <layout-column id="ColumnLayout3" style="align-items: stretch">
-                                                        <davinci-button id="B_LoadConfig" type="primary"
-                                                            icon-position="append"
-                                                            title="Load configured parameters from CSK_PersistentData module.">
-                                                            <span>Load Config</span>
-                                                            <crown-binding event="submit"
-                                                                name="CSK_MultiRemoteLiDAR/loadParameters" auto-commit>
-                                                            </crown-binding>
-                                                            <crown-edpws-binding property="disabled"
-                                                                name="CSK_MultiRemoteLiDAR/OnPersistentDataModuleAvailable"
-                                                                update-on-resume
-                                                                converter="function(value) {return !value;}">
-                                                            </crown-edpws-binding>
-                                                        </davinci-button>
-                                                    </layout-column>
-                                                    <layout-column id="ColumnLayout4" style="align-items: stretch">
-                                                        <davinci-button id="B_SaveConfig" type="primary"
-                                                            icon-position="append"
-                                                            title="Save current configured parameters of this module within CSK_PersistentData module.">
-                                                            <span>Save Config</span>
-                                                            <crown-binding event="submit"
-                                                                name="CSK_MultiRemoteLiDAR/sendParameters" auto-commit>
-                                                            </crown-binding>
-                                                            <crown-edpws-binding property="disabled"
-                                                                name="CSK_MultiRemoteLiDAR/OnPersistentDataModuleAvailable"
-                                                                update-on-resume
-                                                                converter="function(value) {return !value;}">
-                                                            </crown-edpws-binding>
-                                                        </davinci-button>
-                                                    </layout-column>
-                                                </layout-row>
-                                            </layout-column>
-                                        </layout-row>
-                                    </layout-column>
-                                </layout-row>
-                            </davinci-tab>
-       <davinci-tab id="Tab_Features" label="Features">
+												<layout-row id="RowLayout7">
+												<layout-column id="ColumnLayout8" style="align-items: stretch">
+												<davinci-button id="Button_StartLiDAR" type="primary"
+													icon-position="append">
+												<span>StartLiDAR</span>
+												<crown-binding event="submit"
+													name="CSK_MultiRemoteLiDAR/startLiDARSensor" auto-commit>
+												</crown-binding>
+												<crown-on property="disabled"
+													crown-event="CSK_MultiRemoteLiDAR/OnActivateStartAndStopLiDAROnUI">
+												</crown-on>
+												</davinci-button>
+												</layout-column>
+												<layout-column id="ColumnLayout11" style="align-items: stretch">
+												<davinci-button id="Button_StopLiDAR" type="primary"
+													icon-position="append">
+												<span>StopLiDAR</span>
+												<crown-binding event="submit"
+													name="CSK_MultiRemoteLiDAR/stopLiDARSensor" auto-commit>
+												</crown-binding>
+												<crown-on property="disabled"
+													crown-event="CSK_MultiRemoteLiDAR/OnActivateStartAndStopLiDAROnUI">
+												</crown-on>
+												</davinci-button>
+												</layout-column>
+												</layout-row>
+											</layout-column>
+										</layout-row>
+										<layout-row id="RowLayout22">
+											<layout-column id="ColumnLayout24" style="align-items: stretch">
+												<davinci-collapse id="Filtering" collapsed-title="Filtering"
+													expanded-title="Hide">
+												<layout-column id="ColumnLayout25" style="align-items: stretch">
+												<layout-row id="RowLayout24"
+													class="myCustomFrame_CSK_Module_MultiRemoteLiDAR"
+													title="Angle-Filter"
+													style="justify-content: space-between; align-items: center">
+												<layout-column id="ColumnLayout26" style="align-items: stretch">
+												<davinci-checkbox id="Checkbox4">
+												<span></span>
+												<crown-on property="checked"
+													crown-event="CSK_MultiRemoteLiDAR/OnNewStatusAngleFilter">
+												</crown-on>
+												</davinci-checkbox>
+												</layout-column>
+												<layout-column id="ColumnLayout39">
+												<davinci-value-display id="ValueDisplay6" value="Angle-Filter">
+												</davinci-value-display>
+												</layout-column>
+												<layout-column id="ColumnLayout27" style="align-items: stretch">
+												<davinci-number-input id="NumberInput1"
+													class="myCustomFrame_StartAngle" step="1" label="Start-Angle"
+													max="270" min="-90">
+												<crown-on property="value"
+													crown-event="CSK_MultiRemoteLiDAR/OnNewValueAngleFilterStartAngle">
+												</crown-on>
+												</davinci-number-input>
+												</layout-column>
+												<layout-column id="ColumnLayout28" style="align-items: stretch">
+												<davinci-number-input id="NumberInput2"
+													class="myCustomFrame_StopAngle" step="1" label="Stop-Angle"
+													max="270" min="-90">
+												<crown-on property="value"
+													crown-event="CSK_MultiRemoteLiDAR/OnNewValueAngleFilterStopAngle">
+												</crown-on>
+												</davinci-number-input>
+												</layout-column>
+												</layout-row>
+												<layout-row id="RowLayout25"
+													class="myCustomFrame_CSK_Module_MultiRemoteLiDAR"
+													title="Mean-Filter over n Sans"
+													style="justify-content: space-between; align-items: center">
+												<layout-column id="ColumnLayout40" style="align-items: stretch">
+												<davinci-checkbox id="Checkbox1">
+												<span></span>
+												</davinci-checkbox>
+												</layout-column>
+												<layout-column id="ColumnLayout29" style="align-items: stretch">
+												<davinci-value-display id="ValueDisplay2"
+													value="Mean-Filter over n Scans">
+												</davinci-value-display>
+												</layout-column>
+												<layout-column id="ColumnLayout30" style="align-items: stretch">
+												</layout-column>
+												<layout-column id="ColumnLayout31" style="align-items: stretch">
+												<davinci-number-input id="NumberInput3" step="1" max="20" min="0"
+													label="Depth">
+												<crown-on property="value"
+													crown-event="CSK_MultiRemoteLiDAR/OnNewValueMeanFilterScans">
+												</crown-on>
+												</davinci-number-input>
+												</layout-column>
+												</layout-row>
+												<layout-row id="RowLayout34"
+													class="myCustomFrame_CSK_Module_MultiRemoteLiDAR"
+													title="Mean-Filter over n Beams" style="align-items: center">
+												<layout-column id="ColumnLayout51">
+												<davinci-checkbox id="Checkbox5">
+												<span></span>
+												<crown-on property="checked"
+													crown-event="CSK_MultiRemoteLiDAR/OnNewStatusMeanFilterBeams">
+												</crown-on>
+												</davinci-checkbox>
+												</layout-column>
+												<layout-column id="ColumnLayout52">
+												<davinci-value-display id="ValueDisplay14"
+													value="Mean-Filter over 3 Beams">
+												</davinci-value-display>
+												</layout-column>
+												<layout-column id="ColumnLayout53"></layout-column>
+												<layout-column id="ColumnLayout54">
+												<davinci-number-input id="NumberInput7" step="1" max="20" min="0"
+													label="Depth">
+												<crown-on property="value"
+													crown-event="CSK_MultiRemoteLiDAR/OnNewValueMeanFilterBeams">
+												</crown-on>
+												</davinci-number-input>
+											</layout-column>
+												</layout-row>
+												<layout-row id="RowLayout35"
+													class="myCustomFrame_CSK_Module_MultiRemoteLiDAR"
+													title="Reduce resolution" style="align-items: center">
+												<layout-column id="ColumnLayout55">
+												<davinci-checkbox id="Checkbox6">
+												<span></span>
+												<crown-on property="checked"
+													crown-event="CSK_MultiRemoteLiDAR/OnNewStatusResolutionHalving">
+												</crown-on>
+												</davinci-checkbox>
+												</layout-column>
+												<layout-column id="ColumnLayout56">
+												<davinci-value-display id="ValueDisplay15" value="Resolution halving">
+												</davinci-value-display>
+												</layout-column>
+												<layout-column id="ColumnLayout57"></layout-column>
+												<layout-column id="ColumnLayout58"></layout-column>
+												</layout-row>
+												</layout-column>
+												<layout-row id="RowLayout23"></layout-row>
+												</davinci-collapse>
+												<davinci-collapse id="Measuring" collapsed-title="Measuring"
+													expanded-title="Hide">
+												<layout-column id="ColumnLayout43" style="align-items: stretch">
+												<layout-column id="ColumnLayout46"
+													class="myCustomFrame_CSK_Module_MultiRemoteLiDAR"
+													style="align-items: stretch">
+												<layout-row id="RowLayout26" title="Edge-Detection"
+													style="justify-content: space-between; align-items: center">
+												<layout-column id="ColumnLayout41" style="align-items: stretch">
+												<davinci-checkbox id="Checkbox2">
+												<span></span>
+												<crown-on property="checked"
+													crown-event="CSK_MultiRemoteLiDAR/OnNewStatusEdgeDetection">
+												</crown-on>
+												</davinci-checkbox>
+												</layout-column>
+												<layout-column id="ColumnLayout32" style="align-items: stretch">
+												<davinci-value-display id="ValueDisplay3" value="Edge-Detection">
+												</davinci-value-display>
+												</layout-column>
+												<layout-column id="ColumnLayout34" style="align-items: stretch">
+												<davinci-number-input id="NumberInput8"
+													class="myCustomFrame_EdgeDetection" step="1" max="200" min="5"
+													label="min. Gab.">
+												<crown-on property="value"
+													crown-event="CSK_MultiRemoteLiDAR/OnNewValueGabThreshold">
+												</crown-on>
+												</davinci-number-input>
+												</layout-column>
+												<layout-column id="ColumnLayout35" style="align-items: stretch">
+												<davinci-number-input id="NumberInput4"
+													class="myCustomFrame_EdgeDetection" step="1" max="200" min="2"
+													label="min. Distance">
+												<crown-on property="value"
+													crown-event="CSK_MultiRemoteLiDAR/OnNewValueGradientThreshold">
+												</crown-on>
+												</davinci-number-input>
+												</layout-column>
+												</layout-row>
+												<layout-row id="RowLayout28" style="justify-content: space-between">
+												<layout-column id="ColumnLayout49">
+												<davinci-value-display id="ValueDisplay12" value="Results">
+												</davinci-value-display>
+												</layout-column>
+												<layout-column id="ColumnLayout44">
+												<layout-row id="RowLayout29">
+												<davinci-value-display id="ValueDisplay8" value="Edge-Detection Gab:">
+												</davinci-value-display>
+												<davinci-value-display id="ValueDisplay1">
+												</davinci-value-display>
+												</layout-row>
+												</layout-column>
+												<layout-column id="ColumnLayout45">
+												<layout-row id="RowLayout30">
+												<davinci-value-display id="ValueDisplay9"
+													value="Edge-Detection Height:">
+												</davinci-value-display>
+												<davinci-value-display id="ValueDisplay7">
+												</davinci-value-display>
+												</layout-row>
+												</layout-column>
+												<layout-column id="ColumnLayout59">
+												<layout-row id="RowLayout36">
+												<davinci-value-display id="ValueDisplay16" value="Angle:">
+												</davinci-value-display>
+												<davinci-value-display id="ValueDisplay17">
+												</davinci-value-display>
+												</layout-row>
+												</layout-column>
+												</layout-row>
+												</layout-column>
+												<layout-column id="ColumnLayout47"
+													class="myCustomFrame_CSK_Module_MultiRemoteLiDAR"
+													style="align-items: stretch">
+												<layout-row id="RowLayout27" title="Fixed Point Measurement"
+													style="align-items: center">
+												<layout-column id="ColumnLayout42" style="align-items: stretch">
+												<davinci-checkbox id="Checkbox3">
+												<span></span>
+												<crown-on property="checked"
+													crown-event="CSK_MultiRemoteLiDAR/OnNewStatusFixedPoint">
+												</crown-on>
+												</davinci-checkbox>
+												</layout-column>
+												<layout-column id="ColumnLayout36" style="justify-content: center">
+												<davinci-value-display id="ValueDisplay4" value="Fixed Point">
+												</davinci-value-display>
+												<davinci-value-display id="ValueDisplay5" value="Height-Measurement">
+												</davinci-value-display>
+												</layout-column>
+												<layout-column id="ColumnLayout37">
+												<davinci-number-input id="NumberInput6"
+													class="myCustomFrame_FirstFixedPoint" step="1" max="270" min="-90"
+													label="First Point">
+												<crown-on property="value"
+													crown-event="CSK_MultiRemoteLiDAR/OnNewValuePointA">
+												</crown-on>
+												</davinci-number-input>
+												</layout-column>
+												<layout-column id="ColumnLayout38">
+												<davinci-number-input id="NumberInput5"
+													class="myCustomFrame_SecondFixedPoint" step="1" max="270"
+													min="-90" label="Second Point">
+												<crown-on property="value"
+													crown-event="CSK_MultiRemoteLiDAR/OnNewValuePointB">
+												</crown-on>
+												</davinci-number-input>
+												</layout-column>
+												</layout-row>
+												<layout-row id="RowLayout31" style="justify-content: space-between">
+												<layout-column id="ColumnLayout50">
+												<davinci-value-display id="ValueDisplay13" value="Results">
+												</davinci-value-display>
+												</layout-column>
+												<layout-column id="ColumnLayout48">
+												<layout-row id="RowLayout33">
+												<davinci-value-display id="ValueDisplay10"
+													value="Fixed-Point Height:">
+												</davinci-value-display>
+												<davinci-value-display id="ValueDisplay11">
+												</davinci-value-display>
+												</layout-row>
+												</layout-column>
+												</layout-row>
+												</layout-column>
+												</layout-column>
+												<layout-row id="RowLayout32"></layout-row>
+												</davinci-collapse>
+											</layout-column>
+										</layout-row>
+										<layout-row id="RowLayout9" style="align-items: flex-end">
+											<layout-column id="Column_PersistentData"
+												class="myCustomFrame_CSK_Module_MultiRemoteLiDAR"
+												style="align-items: stretch">
+												<layout-row id="RowLayout4"
+													style="justify-content: space-between; align-items: center">
+												<layout-column id="ColumnLayout5" style="align-items: stretch">
+												<davinci-value-display id="VD_ParameterName" value="Parameter name:"
+													title="Name of the parameters within the CSK_PersistentData module to be uses for this module.">
+												</davinci-value-display>
+												</layout-column>
+												<layout-column id="ColumnLayout6" style="align-items: stretch">
+												<davinci-text-field id="TF_ParameterName" type="text"
+													title="Name of the parameters within the CSK_PersistentData module to be uses for this module.">
+												<crown-edpws-binding property="value"
+													name="CSK_MultiRemoteLiDAR/OnNewParameterName" update-on-resume>
+												</crown-edpws-binding>
+												<crown-binding event="change"
+													name="CSK_MultiRemoteLiDAR/setParameterName"
+													path="param/args/name" auto-commit>
+												</crown-binding>
+												<crown-edpws-binding property="disabled"
+													name="CSK_MultiRemoteLiDAR/OnPersistentDataModuleAvailable"
+													update-on-resume converter="function(value) {return !value;}">
+												</crown-edpws-binding>
+												</davinci-text-field>
+												</layout-column>
+												</layout-row>
+												<layout-row id="RowLayout2"
+													style="justify-content: space-between; align-items: center">
+												<davinci-value-display id="VD_LoadConfig"
+													value="Load config on app start:"
+													title="Load configured parameters from CSK_PersistentData on app start.">
+												</davinci-value-display>
+												<davinci-checkbox id="CB_LoadConfig"
+													title="Load configured parameters from CSK_PersistentData on app start.">
+												<span></span>
+												<crown-edpws-binding property="checked"
+													name="CSK_MultiRemoteLiDAR/OnNewStatusLoadParameterOnReboot"
+													update-on-resume>
+												</crown-edpws-binding>
+												<crown-edpws-binding property="disabled"
+													name="CSK_MultiRemoteLiDAR/OnPersistentDataModuleAvailable"
+													update-on-resume converter="function(value) {return !value;}">
+												</crown-edpws-binding>
+												<crown-binding event="change"
+													name="CSK_MultiRemoteLiDAR/setLoadOnReboot"
+													path="param/args/status" auto-commit>
+												</crown-binding>
+												</davinci-checkbox>
+												</layout-row>
+												<layout-row id="RowLayout3">
+												<layout-column id="ColumnLayout3" style="align-items: stretch">
+												<davinci-button id="B_LoadConfig" type="primary"
+													icon-position="append"
+													title="Load configured parameters from CSK_PersistentData module.">
+												<span>Load Config</span>
+												<crown-binding event="submit"
+													name="CSK_MultiRemoteLiDAR/loadParameters" auto-commit>
+												</crown-binding>
+												<crown-edpws-binding property="disabled"
+													name="CSK_MultiRemoteLiDAR/OnPersistentDataModuleAvailable"
+													update-on-resume converter="function(value) {return !value;}">
+												</crown-edpws-binding>
+												</davinci-button>
+												</layout-column>
+												<layout-column id="ColumnLayout4" style="align-items: stretch">
+												<davinci-button id="B_SaveConfig" type="primary"
+													icon-position="append"
+													title="Save current configured parameters of this module within CSK_PersistentData module.">
+												<span>Save Config</span>
+												<crown-binding event="submit"
+													name="CSK_MultiRemoteLiDAR/sendParameters" auto-commit>
+												</crown-binding>
+												<crown-edpws-binding property="disabled"
+													name="CSK_MultiRemoteLiDAR/OnPersistentDataModuleAvailable"
+													update-on-resume converter="function(value) {return !value;}">
+												</crown-edpws-binding>
+												</davinci-button>
+												</layout-column>
+												</layout-row>
+											</layout-column>
+										</layout-row>
+									</layout-column>
+								</layout-row>
+							</davinci-tab>
+							<davinci-tab id="Tab_Features" label="Features">
 								<layout-row id=" RowLayout16">
 									<layout-column id="ColumnLayout15"
 										class="myCustomFrame_CSK_Module_MultiRemoteLiDAR"
@@ -343,8 +593,8 @@
 										<layout-row id="Placeholder4"
 											class="myCustomMinHeight10px_CSK_Module_MultiRemoteLiDAR">
 										</layout-row>
-										<davinci-collapse id="Collapse:EncoderMode" expanded-title="Hide"
-											collapsed-title="Show config">
+										<davinci-collapse id="Collapse:EncoderMode"
+											collapsed-title="Show config" expanded-title="Hide">
 											<layout-row id="RowLayout21">
 												<layout-column id="ColumnLayout23" style="align-items: stretch">
 												<layout-row id="RowLayout18"
@@ -442,50 +692,58 @@
 									</layout-column>
 								</layout-row>
 							</davinci-tab>
-                <davinci-tab id="Tab_Instances" label="Instances">
-                    <layout-row id="RowLayout13">
-                        <layout-column id="ColumnLayout12" style="align-items: stretch">
-                            <davinci-value-display id="VD_InstanceAmount" label="Amount of instances">
-                                <crown-edpws-binding property="value"
-                                    name="CSK_MultiRemoteLiDAR/OnNewStatusInstanceAmount" update-on-resume
-                                    converter="function(value) {return value.toString();}">
-                                </crown-edpws-binding>
-                            </davinci-value-display>
-                            <davinci-button id="Button1" type="primary" icon-position="append">
-                                <span>Add instance</span>
-                                <crown-binding event="submit" name="CSK_MultiRemoteLiDAR/addInstance" auto-commit>
-                                </crown-binding>
-                            </davinci-button>
-                            <davinci-button id="Button2" type="primary" icon-position="append">
-                                <span>Reset instances</span>
-                                <crown-binding event="submit" name="CSK_MultiRemoteLiDAR/resetInstances" auto-commit>
-                                </crown-binding>
-                            </davinci-button>
-                        </layout-column>
-                    </layout-row>
-                </davinci-tab>
-                </davinci-tabs>
-    </layout-column>
-</layout-row>
-</stacked-pane>
-<stacked-pane id="SP_LoginNOK" value="false">
-    <layout-row id="RowLayout6">
-        <davinci-callout id="Callout1" type="info">
-            <span>Please log in via UserManagement module.</span>
-        </davinci-callout>
-    </layout-row>
-</stacked-pane>
-<crown-edpws-binding property="value" name="CSK_MultiRemoteLiDAR/OnUserLevelOperatorActive" update-on-resume
-    converter="function(value) {return value.toString();}">
-</crown-edpws-binding>
-</stacked-view>
-<stacked-view id="SV_PageCalled">
-    <crown-binding property="value" name="CSK_MultiRemoteLiDAR/pageCalled" path="result/data/empty" auto-update="0"
-        update-on-resume converter="changeID">
-    </crown-binding>
-    <crown-edpws-binding property="value" name="CSK_MultiRemoteLiDAR/OnNewViewerID" update-on-resume
-        converter="changeID">
-    </crown-edpws-binding>
-</stacked-view>
-</layout-column>
+							<davinci-tab id="Tab_Instances" label="Instances">
+								<layout-row id="RowLayout13">
+									<layout-column id="ColumnLayout12" style="align-items: stretch">
+										<davinci-value-display id="VD_InstanceAmount"
+											label="Amount of instances">
+											<crown-edpws-binding property="value"
+												name="CSK_MultiRemoteLiDAR/OnNewStatusInstanceAmount"
+												update-on-resume
+												converter="function(value) {return value.toString();}">
+											</crown-edpws-binding>
+										</davinci-value-display>
+										<davinci-button id="Button1" type="primary" icon-position="append">
+											<span>Add instance</span>
+											<crown-binding event="submit" name="CSK_MultiRemoteLiDAR/addInstance"
+												auto-commit>
+											</crown-binding>
+										</davinci-button>
+										<davinci-button id="Button2" type="primary" icon-position="append">
+											<span>Reset instances</span>
+											<crown-binding event="submit"
+												name="CSK_MultiRemoteLiDAR/resetInstances" auto-commit>
+											</crown-binding>
+										</davinci-button>
+									</layout-column>
+								</layout-row>
+							</davinci-tab>
+						</davinci-tabs>
+					</layout-column>
+				</layout-row>
+			</stacked-pane>
+			<stacked-pane id="SP_LoginNOK" value="false">
+				<layout-row id="RowLayout6">
+					<davinci-callout id="Callout1" type="info">
+						<span>Please log in via UserManagement module.</span>
+					</davinci-callout>
+				</layout-row>
+			</stacked-pane>
+			<crown-edpws-binding property="value"
+				name="CSK_MultiRemoteLiDAR/OnUserLevelOperatorActive"
+				update-on-resume
+				converter="function(value) {return value.toString();}">
+			</crown-edpws-binding>
+		</stacked-view>
+		<stacked-view id="SV_PageCalled">
+			<crown-binding property="value" name="CSK_MultiRemoteLiDAR/pageCalled"
+				path="result/data/empty" auto-update="0" update-on-resume
+				converter="changeID">
+			</crown-binding>
+			<crown-edpws-binding property="value"
+				name="CSK_MultiRemoteLiDAR/OnNewViewerId" update-on-resume
+				converter="changeID">
+			</crown-edpws-binding>
+		</stacked-view>
+	</layout-column>
 </layout-row>

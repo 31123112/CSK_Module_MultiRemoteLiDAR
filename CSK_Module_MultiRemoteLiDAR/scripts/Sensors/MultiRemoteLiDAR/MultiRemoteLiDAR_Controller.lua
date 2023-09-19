@@ -27,7 +27,7 @@ local multiRemoteLiDAR_Instances -- Reference to instances handle
 local selectedInstance = 1 -- Which instance is currently selected
 local helperFuncs = require('Sensors/MultiRemoteLiDAR/helper/funcs')
 local bootUpStatus = false -- Is app curently waiting for sensor bootUp
-
+local disableStartStopOnUI = true
 -- ************************ UI Events Start ********************************
 -- Only to prevent WARNING messages, but these are only examples/placeholders for dynamically created events/functions
 ----------------------------------------------------------------
@@ -83,6 +83,52 @@ Script.serveEvent("CSK_MultiRemoteLiDAR.OnUserLevelAdminActive", "MultiRemoteLiD
 Script.serveEvent('CSK_MultiRemoteLiDAR.OnNewStatusIPError', 'MultiRemoteLiDAR_OnNewStatusIPError')
 
 Script.serveEvent('CSK_MultiRemoteLiDAR.OnNewStatusInstanceAmount', 'MultiRemoteLiDAR_OnNewStatusInstanceAmount')
+Script.serveEvent('CSK_MultiRemoteLiDAR.OnActivateStartAndStopLiDAROnUI', 'MultiRemoteLiDAR_OnActivateStartAndStopLiDAROnUI')
+
+-- filtering
+-- AngleFilter
+Script.serveEvent('CSK_MultiRemoteLiDAR.OnNewStatusAngleFilter', 'MultiRemoteLiDAR_OnNewStatusAngleFilter')
+Script.serveEvent('CSK_MultiRemoteLiDAR.OnNewValueAngleFilterStartAngle', 'MultiRemoteLiDAR_OnNewValueAngleFilterStartAngle')
+Script.serveEvent('CSK_MultiRemoteLiDAR.OnNewValueAngleFilterStopAngle', 'MultiRemoteLiDAR_OnNewValueAngleFilterStopAngle')
+
+-- MeanFilter
+Script.serveEvent('CSK_MultiRemoteLiDAR.OnNewStatusMeanFilterScans', 'MultiRemoteLiDAR_OnNewStatusMeanFilterScans')
+Script.serveEvent('CSK_MultiRemoteLiDAR.OnNewStatusMeanFilterBeams', 'MultiRemoteLiDAR_OnNewStatusMeanFilterBeams')
+Script.serveEvent('CSK_MultiRemoteLiDAR.OnNewValueMeanFilterScans', 'MultiRemoteLiDAR_OnNewValueMeanFilterScans')
+Script.serveEvent('CSK_MultiRemoteLiDAR.OnNewValueMeanFilterBeams', 'MultiRemoteLiDAR_OnNewValueMeanFilterBeams')
+
+-- Resolution-halving
+Script.serveEvent('CSK_MultiRemoteLiDAR.OnNewStatusResolutionHalving', 'MultiRemoteLiDAR_OnNewStatusResolutionHalving')
+
+-- measuring
+-- edgeDetection
+Script.serveEvent('CSK_MultiRemoteLiDAR.OnNewStatusEdgeDetection', 'MultiRemoteLiDAR_OnNewStatusEdgeDetection')
+Script.serveEvent('CSK_MultiRemoteLiDAR.OnNewValueGabThreshold', 'MultiRemoteLiDAR_OnNewValueGabThreshold')
+Script.serveEvent('CSK_MultiRemoteLiDAR.OnNewValueGradientThreshold', 'MultiRemoteLiDAR_OnNewValueGradientThreshold')
+
+Script.serveEvent('CSK_MultiRemoteLiDAR.OnNewValueEdgeDetectionGabUI', 'MultiRemoteLiDAR_OnNewValueEdgeDetectionGabUI')
+Script.serveEvent('CSK_MultiRemoteLiDAR.OnNewValueEdgeDetectionHeightUI', 'MultiRemoteLiDAR_OnNewValueEdgeDetectionHeightUI')
+Script.serveEvent('CSK_MultiRemoteLiDAR.OnNewValueEdgeDetectionAngleUI', 'MultiRemoteLiDAR_OnNewValueEdgeDetectionAngleUI')
+
+
+-- fixedPoint
+Script.serveEvent('CSK_MultiRemoteLiDAR.OnNewStatusFixedPoint', 'MultiRemoteLiDAR_OnNewStatusFixedPoint')
+Script.serveEvent('CSK_MultiRemoteLiDAR.OnNewValuePointA', 'MultiRemoteLiDAR_OnNewValuePointA')
+Script.serveEvent('CSK_MultiRemoteLiDAR.OnNewValuePointB', 'MultiRemoteLiDAR_OnNewValuePointB')
+
+Script.serveEvent('CSK_MultiRemoteLiDAR.OnNewValueFixedPointHeightUI', 'MultiRemoteLiDAR_OnNewValueFixedPointHeightUI')
+
+
+--results
+Script.serveEvent('CSK_MultiRemoteLiDAR.OnNewEdgeDetectionResults', 'MultiRemoteLiDAR_OnNewEdgeDetectionResults')
+Script.serveEvent('CSK_MultiRemoteLiDAR.OnNewFixedPointResults', 'MultiRemoteLiDAR_OnNewFixedPointResults')
+
+
+
+
+
+
+
 
 -- ************************ UI Events End **********************************
 
@@ -109,6 +155,34 @@ end
 --**************************************************************************
 --**********************Start Function Scope *******************************
 --**************************************************************************
+
+--- 
+---@param instanceNumber int 
+---@param gab float 
+---@param height float 
+---@param angle float 
+local function handleOnNewEdgeDetectionResults(instanceNumber, gab, height, angle)
+  if instanceNumber == selectedInstance then
+    Script.notify('MultiRemoteLiDAR_OnNewValueEdgeDetectionGabUI',string.format("%0.0f mm", gab))
+    Script.notify('MultiRemoteLiDAR_OnNewValueEdgeDetectionHeightUI',string.format("%0.0f mm", height))
+    Script.notify('MultiRemoteLiDAR_OnNewValueEdgeDetectionAngleUI',string.format("%0.0f °", angle))
+  end
+end
+Script.register('CSK_MultiRemoteLiDAR.OnNewEdgeDetectionResults', handleOnNewEdgeDetectionResults)
+
+
+--- 
+---@param instance int 
+---@param height float 
+local function handleOnNewFixedPointResults(instance, height)
+  if instanceNumber == selectedInstance then
+    Script.notify('MultiRemoteLiDAR_OnNewValueFixedPointHeightUI',string.format("%0.0f mm", height))
+  end
+end
+Script.register('CSK_MultiRemoteLiDAR.OnNewFixedPointResults', handleOnNewFixedPointResults)
+
+
+
 
 -- Functions to forward logged in user roles via CSK_UserManagement module (if available)
 -- ***********************************************
@@ -216,6 +290,37 @@ local function handleOnExpiredTmrMultiRemoteLiDAR()
   Script.notifyEvent("MultiRemoteLiDAR_OnNewParameterName", multiRemoteLiDAR_Instances[selectedInstance].parametersName)
 
   Script.notifyEvent("MultiRemoteLiDAR_OnNewStatusIPError", false)
+
+  
+  Script.notifyEvent('MultiRemoteLiDAR_OnActivateStartAndStopLiDAROnUI', disableStartStopOnUI)
+
+  --filtering
+  -- AngleFilter
+  Script.notifyEvent("MultiRemoteLiDAR_OnNewStatusAngleFilter", multiRemoteLiDAR_Instances[selectedInstance].parameters.filtering.angleFilter.enable)
+  Script.notifyEvent("MultiRemoteLiDAR_OnNewValueAngleFilterStartAngle", tostring(multiRemoteLiDAR_Instances[selectedInstance].parameters.filtering.angleFilter.startAngle))
+  Script.notifyEvent("MultiRemoteLiDAR_OnNewValueAngleFilterStopAngle", tostring(multiRemoteLiDAR_Instances[selectedInstance].parameters.filtering.angleFilter.stopAngle))
+
+  -- MeanFilter
+  Script.notifyEvent("MultiRemoteLiDAR_OnNewStatusMeanFilterScans", multiRemoteLiDAR_Instances[selectedInstance].parameters.filtering.meanFilter.enableScanDepth)
+  Script.notifyEvent("MultiRemoteLiDAR_OnNewStatusMeanFilterBeams", multiRemoteLiDAR_Instances[selectedInstance].parameters.filtering.meanFilter.enableBeamsWidth)
+  Script.notifyEvent("MultiRemoteLiDAR_OnNewValueMeanFilterScans", tostring(multiRemoteLiDAR_Instances[selectedInstance].parameters.filtering.meanFilter.scanDepth))
+  Script.notifyEvent("MultiRemoteLiDAR_OnNewValueMeanFilterBeams", tostring(multiRemoteLiDAR_Instances[selectedInstance].parameters.filtering.meanFilter.beamsWidth))
+
+  -- Resolution-halving
+  Script.notifyEvent("MultiRemoteLiDAR_OnNewStatusResolutionHalving", multiRemoteLiDAR_Instances[selectedInstance].parameters.filtering.resolutionHalving.enable)
+
+  -- measuring
+  -- edgeDetection
+  Script.notifyEvent('MultiRemoteLiDAR_OnNewStatusEdgeDetection', multiRemoteLiDAR_Instances[selectedInstance].parameters.measuring.edgeDetection.enable)
+  Script.notifyEvent('MultiRemoteLiDAR_OnNewValueGabThreshold', tostring(multiRemoteLiDAR_Instances[selectedInstance].parameters.measuring.edgeDetection.gabThreshold))
+  Script.notifyEvent('MultiRemoteLiDAR_OnNewValueGradientThreshold', tostring(multiRemoteLiDAR_Instances[selectedInstance].parameters.measuring.edgeDetection.gradientThreshold))
+
+  -- fixedPoint
+  Script.notifyEvent('MultiRemoteLiDAR_OnNewStatusFixedPoint', multiRemoteLiDAR_Instances[selectedInstance].parameters.measuring.fixedPoint.enable)
+  Script.notifyEvent('MultiRemoteLiDAR_OnNewValuePointA', tostring(multiRemoteLiDAR_Instances[selectedInstance].parameters.measuring.fixedPoint.scanAngleA))
+  Script.notifyEvent('MultiRemoteLiDAR_OnNewValuePointB', tostring(multiRemoteLiDAR_Instances[selectedInstance].parameters.measuring.fixedPoint.scanAngleB))
+
+  -- fixedPoint
 
 end
 Timer.register(tmrMultiRemoteLiDAR, "OnExpired", handleOnExpiredTmrMultiRemoteLiDAR)
@@ -480,6 +585,8 @@ local function setupSensorsAfterBootUp()
       CSK_MultiRemoteLiDAR.startLiDARSensor()
       isOneConnected = true
     end
+    disableStartStopOnUI = false
+    Script.notifyEvent('MultiRemoteLiDAR_OnActivateStartAndStopLiDAROnUI', disableStartStopOnUI)
   end
   bootUpStatus = false
   Script.notifyEvent('MultiRemoteLiDAR_OnDataLoadedOnReboot')

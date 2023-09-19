@@ -195,6 +195,94 @@ INFO: Other modules can check via "Script.isServedAsEvent" if event of sepecific
                     <desc>Notify event to start encoder scan measurement if notified.</desc>
                     <param desc="Name of event" multiplicity="1" name="event" type="string"/>
                 </event>
+                <event name="OnNewStatusAngleFilter">
+                    <desc/>
+                    <param desc="" multiplicity="1" name="state" type="bool"/>
+                </event>
+                <event name="OnNewValueAngleFilterStartAngle">
+                    <desc/>
+                    <param desc="" multiplicity="1" name="startAngle" type="string"/>
+                </event>
+                <event name="OnNewValueAngleFilterStopAngle">
+                    <desc/>
+                    <param desc="" multiplicity="1" name="stopAngle" type="string"/>
+                </event>
+                <event name="OnNewStatusMeanFilterScans">
+                    <desc/>
+                    <param desc="" multiplicity="1" name="state" type="bool"/>
+                </event>
+                <event name="OnNewStatusMeanFilterBeams">
+                    <desc/>
+                    <param desc="" multiplicity="1" name="state" type="bool"/>
+                </event>
+                <event name="OnNewValueMeanFilterScans">
+                    <desc/>
+                    <param desc="" multiplicity="1" name="scans" type="string"/>
+                </event>
+                <event name="OnNewValueMeanFilterBeams">
+                    <desc/>
+                    <param desc="" multiplicity="1" name="beams" type="string"/>
+                </event>
+                <event name="OnNewStatusResolutionHalving">
+                    <desc/>
+                    <param desc="" multiplicity="1" name="state" type="bool"/>
+                </event>
+                <event name="OnNewStatusEdgeDetection">
+                    <desc/>
+                    <param desc="" multiplicity="1" name="state" type="bool"/>
+                </event>
+                <event name="OnNewValueGabThreshold">
+                    <desc/>
+                    <param desc="" multiplicity="1" name="gabThreshold" type="string"/>
+                </event>
+                <event name="OnNewValueGradientThreshold">
+                    <desc/>
+                    <param desc="" multiplicity="1" name="gradientThreshold" type="string"/>
+                </event>
+                <event name="OnNewStatusFixedPoint">
+                    <desc/>
+                    <param desc="" multiplicity="1" name="state" type="bool"/>
+                </event>
+                <event name="OnNewValuePointA">
+                    <desc/>
+                    <param desc="" multiplicity="1" name="pointA" type="string"/>
+                </event>
+                <event name="OnNewValuePointB">
+                    <desc/>
+                    <param desc="" multiplicity="1" name="pointB" type="string"/>
+                </event>
+                <event name="OnActivateStartAndStopLiDAROnUI">
+                    <desc/>
+                    <param desc="" multiplicity="1" name="deactivated" type="bool"/>
+                </event>
+                <event name="OnNewEdgeDetectionResults">
+                    <desc/>
+                    <param desc="" multiplicity="1" name="instanceNumber" type="int"/>
+                    <param desc="" multiplicity="1" name="gab" type="float"/>
+                    <param desc="" multiplicity="1" name="height" type="float"/>
+                    <param desc="" multiplicity="1" name="angle" type="float"/>
+                </event>
+                <event name="OnNewFixedPointResults">
+                    <desc/>
+                    <param desc="" multiplicity="1" name="instance" type="int"/>
+                    <param desc="" multiplicity="1" name="height" type="float"/>
+                </event>
+                <event name="OnNewValueEdgeDetectionGabUI">
+                    <desc/>
+                    <param desc="" multiplicity="1" name="gab" type="string"/>
+                </event>
+                <event name="OnNewValueEdgeDetectionHeightUI">
+                    <desc/>
+                    <param desc="" multiplicity="1" name="height" type="string"/>
+                </event>
+                <event name="OnNewValueEdgeDetectionAngleUI">
+                    <desc/>
+                    <param desc="" multiplicity="1" name="angle" type="string"/>
+                </event>
+                <event name="OnNewValueFixedPointHeightUI">
+                    <desc/>
+                    <param desc="" multiplicity="1" name="height" type="string"/>
+                </event>
                 <function name="setParameterName">
                     <desc>Function to set the name of the parameters if saved/loaded via the CSK_PersistentData module.</desc>
                     <param desc="Name of the parameter" multiplicity="1" name="name" type="string"/>

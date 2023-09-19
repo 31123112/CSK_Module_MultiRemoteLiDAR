@@ -64,6 +64,37 @@ function multiRemoteLiDAR.create(multiRemoteLiDARInstanceNo)
     self.parameters.encoderModeLoop = false -- Should it retrigger the encoder measurement automatically
     self.parameters.encoderDurationMode = 'TICKS' -- Encoder duration mode 'TICKS' (maybe add in future 'DISTANCE', 'TIME', 'CONVEYOR_TIMEOUT')
     self.parameters.encoderDurationModeValue = 200 -- Related to encoderDurationMode, value to determine how long LiDAR data should be collected combined with encoder data before providing PointCloud
+    
+    --filtering
+    self.parameters.filtering = {}
+
+    self.parameters.filtering.angleFilter = {} -- all paramters for the angleFilter
+    self.parameters.filtering.angleFilter.enable = false -- aktivate / deaktivate angleFilter
+    self.parameters.filtering.angleFilter.startAngle = -45 --Start-angle in degree (scan-angle)
+    self.parameters.filtering.angleFilter.stopAngle = 45 --Stop-angle in degree (scan-angle)
+
+    self.parameters.filtering.meanFilter = {} -- all parameters for the meanFilter
+    self.parameters.filtering.meanFilter.enableScanDepth = false -- aktivate / deaktivate meanFilter over scans
+    self.parameters.filtering.meanFilter.enableBeamsWidth = false -- aktivate / deaktivate meanFilter over beams
+    self.parameters.filtering.meanFilter.scanDepth = 10 -- averaging over 10 scans
+    self.parameters.filtering.meanFilter.beamsWidth = 3 -- averaging over 3 beams: beamsWidthMean = SUM(  (Xn-1) + (Xn) + (Xn+1)  ) / 3
+
+    self.parameters.filtering.resolutionHalving = {} -- all parameters for the resolutionHalving
+    self.parameters.filtering.resolutionHalving.enable = false -- aktivate / deaktivate resolutionHalving
+
+    -- measuring
+    self.parameters.measuring = {}
+
+    self.parameters.measuring.edgeDetection = {}
+    self.parameters.measuring.edgeDetection.enable = false
+    self.parameters.measuring.edgeDetection.gabThreshold = 20 -- X min gab to detect in mm distance
+    self.parameters.measuring.edgeDetection.gradientThreshold = 8 -- Y min distance in mm 
+
+    self.parameters.measuring.fixedPoint = {}
+    self.parameters.measuring.fixedPoint.enable = false
+    self.parameters.measuring.fixedPoint.scanAngleA = -40
+    self.parameters.measuring.fixedPoint.scanAngleB = 40
+
 
     self.lidarProvider:setInterface(self.parameters.interface)
     self.lidarProvider:setIPAddress(self.parameters.ipAddress)
