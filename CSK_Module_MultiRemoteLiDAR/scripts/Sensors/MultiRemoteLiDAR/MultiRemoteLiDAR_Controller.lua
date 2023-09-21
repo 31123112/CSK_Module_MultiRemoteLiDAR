@@ -124,12 +124,6 @@ Script.serveEvent('CSK_MultiRemoteLiDAR.OnNewEdgeDetectionResults', 'MultiRemote
 Script.serveEvent('CSK_MultiRemoteLiDAR.OnNewFixedPointResults', 'MultiRemoteLiDAR_OnNewFixedPointResults')
 
 
-
-
-
-
-
-
 -- ************************ UI Events End **********************************
 
 --- Function to check if inserted string is a valid IP

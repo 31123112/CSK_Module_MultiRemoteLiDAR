@@ -114,6 +114,25 @@ function multiRemoteLiDAR.create(multiRemoteLiDARInstanceNo)
     self.multiRemoteLiDARProcessingParams:add('encoderDurationMode', self.parameters.encoderDurationMode, "STRING")
     self.multiRemoteLiDARProcessingParams:add('encoderDurationModeValue', self.parameters.encoderDurationModeValue, "INT")
     self.multiRemoteLiDARProcessingParams:add('encoderTriggerEvent', self.parameters.encoderTriggerEvent, "STRING")
+    --New
+    self.multiRemoteLiDARProcessingParams:add('angleFilterEnable', self.parameters.filtering.angleFilter.enable, "BOOL")
+    self.multiRemoteLiDARProcessingParams:add('angleFilterStartAngle', self.parameters.filtering.angleFilter.startAngle, "FLOAT")
+    self.multiRemoteLiDARProcessingParams:add('angleFilterStopAngle', self.parameters.filtering.angleFilter.stopAngle, "FLOAT")
+
+    self.multiRemoteLiDARProcessingParams:add('meanFilterEnableScanDepth', self.parameters.filtering.meanFilter.enableScanDepth, "BOOL")
+    self.multiRemoteLiDARProcessingParams:add('meanFilterEnableBeamsWidth', self.parameters.filtering.meanFilter.enableBeamsWidth, "BOOL")
+    self.multiRemoteLiDARProcessingParams:add('meanFilterScanDepth', self.parameters.filtering.meanFilter.scanDepth, "INT")
+    self.multiRemoteLiDARProcessingParams:add('meanFilterBeamsWidth', self.parameters.filtering.meanFilter.beamsWidth, "INT")
+
+    self.multiRemoteLiDARProcessingParams:add('resolutionHalvingEnable', self.parameters.filtering.resolutionHalving.enable, "BOOL")
+
+    self.multiRemoteLiDARProcessingParams:add('edgeDetectionEnable', self.parameters.measuring.edgeDetection.enable, "BOOL")
+    self.multiRemoteLiDARProcessingParams:add('edgeDetectionGabThreshold', self.parameters.measuring.edgeDetection.gabThreshold, "INT")
+    self.multiRemoteLiDARProcessingParams:add('edgeDetectionGradientThreshold', self.parameters.measuring.edgeDetection.gradientThreshold, "INT")
+
+    self.multiRemoteLiDARProcessingParams:add('fixedPointEnable', self.parameters.measuring.fixedPoint.enable, "BOOL")
+    self.multiRemoteLiDARProcessingParams:add('fixedPointScanAngleA', self.parameters.measuring.fixedPoint.scanAngleA, "FLOAT")
+    self.multiRemoteLiDARProcessingParams:add('fixedPointScanAngleB', self.parameters.measuring.fixedPoint.scanAngleB, "FLOAT")
 
     -- Handle processing
     Script.startScript(self.parameters.processingFile, self.multiRemoteLiDARProcessingParams)

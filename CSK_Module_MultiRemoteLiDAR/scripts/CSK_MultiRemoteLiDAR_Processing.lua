@@ -38,6 +38,34 @@ processingParams.encoderDurationMode = scriptParams:get('encoderDurationMode') -
 processingParams.encoderDurationModeValue = scriptParams:get('encoderDurationModeValue') -- Related to encoderDurationMode, value to determine how long LiDAR data should be collected combined with encoder data before providing PointCloud
 processingParams.encoderTriggerEvent = scriptParams:get('encoderTriggerEvent') -- Event to start encoder scan if notified
 
+-- NEW
+processingParams.filter = {}
+
+processingParams.filter.angleFilter = {}
+processingParams.filter.angleFilter.enable = scriptParams:get('angleFilterEnable')
+processingParams.filter.angleFilter.startAngle = scriptParams:get('angleFilterStartAngle')
+processingParams.filter.angleFilter.stopAngle = scriptParams:get('angleFilterStopAngle')
+
+processingParams.filter.meanFilter = {}
+processingParams.filter.meanFilter.enableScanDepth = scriptParams:get('meanFilterEnableScanDepth')
+processingParams.filter.meanFilter.enableBeamsWidth = scriptParams:get('meanFilterEnableBeamsWidth')
+processingParams.filter.meanFilter.scanDepth = scriptParams:get('meanFilterScanDepth')
+processingParams.filter.meanFilter.beamsWidth = scriptParams:get('meanFilterBeamsWidth')
+
+processingParams.filter.resolutionHalving = {}
+processingParams.filter.resolutionHalving.enable = scriptParams:get('resolutionHalvingEnable')
+
+processingParams.measuring = {}
+processingParams.measuring.edgeDetection = {}
+processingParams.measuring.edgeDetection.enable = scriptParams:get('edgeDetectionEnable')
+processingParams.measuring.edgeDetection.gabThreshold = scriptParams:get('edgeDetectionGabThreshold')
+processingParams.measuring.edgeDetection.gradientThreshold = scriptParams:get('edgeDetectionGradientThreshold')
+
+processingParams.measuring.fixedPoint = {}
+processingParams.measuring.fixedPoint.enable = scriptParams:get('fixedPointEnable')
+processingParams.measuring.fixedPoint.scanAngleA = scriptParams:get('fixedPointScanAngleA')
+processingParams.measuring.fixedPoint.scanAngleB = scriptParams:get('fixedPointScanAngleB')
+
 local viewer = View.create() -- Viewer to show scan as PointCloud
 viewer:setID(viewerID)
 
