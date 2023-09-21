@@ -319,17 +319,262 @@
                             </davinci-tab>
        <davinci-tab id="Tab_Features" label="Features">
 								<layout-row id=" RowLayout16">
-									<layout-column id="ColumnLayout15"
-										class="myCustomFrame_CSK_Module_MultiRemoteLiDAR"
-										style="align-items: stretch">
-										<layout-row id="Placeholder1"
-											class="myCustomMinHeight10px_CSK_Module_MultiRemoteLiDAR">
-										</layout-row>
-										<layout-row id="RowLayout15"
-											style="justify-content: space-between; align-items: center; width: 99%">
-											<davinci-value-display id="VD_EncoderMode" value="Encoder Mode:">
-											</davinci-value-display>
-											<davinci-toggle-switch id="TS_EncoderMode">
+									<layout-column id="ColumnLayout60" style="align-items: stretch">
+										<layout-column id="ColumnLayout61" style="align-items: stretch">
+											<davinci-collapse id="Filtering" collapsed-title="Filtering"
+												expanded-title="Hide">
+												<layout-column id="ColumnLayout25" style="align-items: stretch">
+												<layout-row id="RowLayout24"
+													class="myCustomFrame_CSK_Module_MultiRemoteLiDAR"
+													title="Angle-Filter"
+													style="justify-content: space-between; align-items: center">
+												<layout-column id="ColumnLayout26" style="align-items: stretch">
+												<davinci-checkbox id="Checkbox4">
+												<span></span>
+												<crown-on property="checked"
+													crown-event="CSK_MultiRemoteLiDAR/OnNewStatusAngleFilter">
+												</crown-on>
+												</davinci-checkbox>
+												</layout-column>
+												<layout-column id="ColumnLayout39">
+												<davinci-value-display id="ValueDisplay6" value="Angle-Filter">
+												</davinci-value-display>
+												</layout-column>
+												<layout-column id="ColumnLayout27" style="align-items: stretch">
+												<davinci-number-input id="NumberInput1"
+													class="myCustomFrame_StartAngle" step="1" label="Start-Angle"
+													max="270" min="-90">
+												<crown-on property="value"
+													crown-event="CSK_MultiRemoteLiDAR/OnNewValueAngleFilterStartAngle">
+												</crown-on>
+												</davinci-number-input>
+												</layout-column>
+												<layout-column id="ColumnLayout28" style="align-items: stretch">
+												<davinci-number-input id="NumberInput2"
+													class="myCustomFrame_StopAngle" step="1" label="Stop-Angle"
+													max="270" min="-90">
+												<crown-on property="value"
+													crown-event="CSK_MultiRemoteLiDAR/OnNewValueAngleFilterStopAngle">
+												</crown-on>
+												</davinci-number-input>
+												</layout-column>
+												</layout-row>
+												<layout-row id="RowLayout25"
+													class="myCustomFrame_CSK_Module_MultiRemoteLiDAR"
+													title="Mean-Filter over n Sans"
+													style="justify-content: space-between; align-items: center">
+												<layout-column id="ColumnLayout40" style="align-items: stretch">
+												<davinci-checkbox id="Checkbox1">
+												<span></span>
+												</davinci-checkbox>
+												</layout-column>
+												<layout-column id="ColumnLayout29" style="align-items: stretch">
+												<davinci-value-display id="ValueDisplay2"
+													value="Mean-Filter over n Scans">
+												</davinci-value-display>
+												</layout-column>
+												<layout-column id="ColumnLayout30" style="align-items: stretch">
+												</layout-column>
+												<layout-column id="ColumnLayout31" style="align-items: stretch">
+												<davinci-number-input id="NumberInput3" step="1" max="20" min="0"
+													label="Depth">
+												<crown-on property="value"
+													crown-event="CSK_MultiRemoteLiDAR/OnNewValueMeanFilterScans">
+												</crown-on>
+												</davinci-number-input>
+												</layout-column>
+												</layout-row>
+												<layout-row id="RowLayout34"
+													class="myCustomFrame_CSK_Module_MultiRemoteLiDAR"
+													title="Mean-Filter over n Beams" style="align-items: center">
+												<layout-column id="ColumnLayout51">
+												<davinci-checkbox id="Checkbox5">
+												<span></span>
+												<crown-on property="checked"
+													crown-event="CSK_MultiRemoteLiDAR/OnNewStatusMeanFilterBeams">
+												</crown-on>
+												</davinci-checkbox>
+												</layout-column>
+												<layout-column id="ColumnLayout52">
+												<davinci-value-display id="ValueDisplay14"
+													value="Mean-Filter over 3 Beams">
+												</davinci-value-display>
+												</layout-column>
+												<layout-column id="ColumnLayout53"></layout-column>
+												<layout-column id="ColumnLayout54">
+												<davinci-number-input id="NumberInput7" step="1" max="20" min="0"
+													label="Depth">
+												<crown-on property="value"
+													crown-event="CSK_MultiRemoteLiDAR/OnNewValueMeanFilterBeams">
+												</crown-on>
+												</davinci-number-input>
+												</layout-column>
+												</layout-row>
+												<layout-row id="RowLayout35"
+													class="myCustomFrame_CSK_Module_MultiRemoteLiDAR"
+													title="Reduce resolution" style="align-items: center">
+												<layout-column id="ColumnLayout55">
+												<davinci-checkbox id="Checkbox6">
+												<span></span>
+												<crown-on property="checked"
+													crown-event="CSK_MultiRemoteLiDAR/OnNewStatusResolutionHalving">
+												</crown-on>
+												</davinci-checkbox>
+												</layout-column>
+												<layout-column id="ColumnLayout56">
+												<davinci-value-display id="ValueDisplay15" value="Resolution halving">
+												</davinci-value-display>
+												</layout-column>
+												<layout-column id="ColumnLayout57"></layout-column>
+												<layout-column id="ColumnLayout58"></layout-column>
+												</layout-row>
+												</layout-column>
+												<layout-row id="RowLayout23"></layout-row>
+											</davinci-collapse>
+											<davinci-collapse id="Measuring" collapsed-title="Measuring"
+												expanded-title="Hide">
+												<layout-column id="ColumnLayout43" style="align-items: stretch">
+												<layout-column id="ColumnLayout46"
+													class="myCustomFrame_CSK_Module_MultiRemoteLiDAR"
+													style="align-items: stretch">
+												<layout-row id="RowLayout26" title="Edge-Detection"
+													style="justify-content: space-between; align-items: center">
+												<layout-column id="ColumnLayout41" style="align-items: stretch">
+												<davinci-checkbox id="Checkbox2">
+												<span></span>
+												<crown-on property="checked"
+													crown-event="CSK_MultiRemoteLiDAR/OnNewStatusEdgeDetection">
+												</crown-on>
+												</davinci-checkbox>
+												</layout-column>
+												<layout-column id="ColumnLayout32" style="align-items: stretch">
+												<davinci-value-display id="ValueDisplay3" value="Edge-Detection">
+												</davinci-value-display>
+												</layout-column>
+												<layout-column id="ColumnLayout34" style="align-items: stretch">
+												<davinci-number-input id="NumberInput8"
+													class="myCustomFrame_EdgeDetection" step="1" max="200" min="5"
+													label="min. Gab.">
+												<crown-on property="value"
+													crown-event="CSK_MultiRemoteLiDAR/OnNewValueGabThreshold">
+												</crown-on>
+												</davinci-number-input>
+												</layout-column>
+												<layout-column id="ColumnLayout35" style="align-items: stretch">
+												<davinci-number-input id="NumberInput4"
+													class="myCustomFrame_EdgeDetection" step="1" max="200" min="2"
+													label="min. Distance">
+												<crown-on property="value"
+													crown-event="CSK_MultiRemoteLiDAR/OnNewValueGradientThreshold">
+												</crown-on>
+												</davinci-number-input>
+												</layout-column>
+												</layout-row>
+												<layout-row id="RowLayout28" style="justify-content: space-between">
+												<layout-column id="ColumnLayout49">
+												<davinci-value-display id="ValueDisplay12" value="Results">
+												</davinci-value-display>
+												</layout-column>
+												<layout-column id="ColumnLayout44">
+												<layout-row id="RowLayout29">
+												<davinci-value-display id="ValueDisplay8" value="Edge-Detection Gab:">
+												</davinci-value-display>
+												<davinci-value-display id="ValueDisplay1">
+												</davinci-value-display>
+												</layout-row>
+												</layout-column>
+												<layout-column id="ColumnLayout45">
+												<layout-row id="RowLayout30">
+												<davinci-value-display id="ValueDisplay9"
+													value="Edge-Detection Height:">
+												</davinci-value-display>
+												<davinci-value-display id="ValueDisplay7">
+												</davinci-value-display>
+												</layout-row>
+												</layout-column>
+												<layout-column id="ColumnLayout59">
+												<layout-row id="RowLayout36">
+												<davinci-value-display id="ValueDisplay16" value="Angle:">
+												</davinci-value-display>
+												<davinci-value-display id="ValueDisplay17">
+												</davinci-value-display>
+												</layout-row>
+												</layout-column>
+												</layout-row>
+												</layout-column>
+												<layout-column id="ColumnLayout47"
+													class="myCustomFrame_CSK_Module_MultiRemoteLiDAR"
+													style="align-items: stretch">
+												<layout-row id="RowLayout27" title="Fixed Point Measurement"
+													style="align-items: center">
+												<layout-column id="ColumnLayout42" style="align-items: stretch">
+												<davinci-checkbox id="Checkbox3">
+												<span></span>
+												<crown-on property="checked"
+													crown-event="CSK_MultiRemoteLiDAR/OnNewStatusFixedPoint">
+												</crown-on>
+												</davinci-checkbox>
+												</layout-column>
+												<layout-column id="ColumnLayout36" style="justify-content: center">
+												<davinci-value-display id="ValueDisplay4" value="Fixed Point">
+												</davinci-value-display>
+												<davinci-value-display id="ValueDisplay5" value="Height-Measurement">
+												</davinci-value-display>
+												</layout-column>
+												<layout-column id="ColumnLayout37">
+												<davinci-number-input id="NumberInput6"
+													class="myCustomFrame_FirstFixedPoint" step="1" max="270" min="-90"
+													label="First Point">
+												<crown-on property="value"
+													crown-event="CSK_MultiRemoteLiDAR/OnNewValuePointA">
+												</crown-on>
+												</davinci-number-input>
+												</layout-column>
+												<layout-column id="ColumnLayout38">
+												<davinci-number-input id="NumberInput5"
+													class="myCustomFrame_SecondFixedPoint" step="1" max="270"
+													min="-90" label="Second Point">
+												<crown-on property="value"
+													crown-event="CSK_MultiRemoteLiDAR/OnNewValuePointB">
+												</crown-on>
+												</davinci-number-input>
+												</layout-column>
+												</layout-row>
+												<layout-row id="RowLayout31" style="justify-content: space-between">
+												<layout-column id="ColumnLayout50">
+												<davinci-value-display id="ValueDisplay13" value="Results">
+												</davinci-value-display>
+												</layout-column>
+												<layout-column id="ColumnLayout48">
+												<layout-row id="RowLayout33">
+												<davinci-value-display id="ValueDisplay10"
+													value="Fixed-Point Height:">
+												</davinci-value-display>
+												<davinci-value-display id="ValueDisplay11">
+												</davinci-value-display>
+												</layout-row>
+												</layout-column>
+												</layout-row>
+												</layout-column>
+												</layout-column>
+												<layout-row id="RowLayout32"></layout-row>
+											</davinci-collapse>
+										</layout-column>
+										<layout-column id="ColumnLayout15"
+											class="myCustomFrame_CSK_Module_MultiRemoteLiDAR"
+											style="align-items: stretch">
+											<layout-row id="RowLayout22">
+												<layout-column id="ColumnLayout24" style="align-items: stretch">
+												</layout-column>
+											</layout-row>
+											<layout-row id="Placeholder1"
+												class="myCustomMinHeight10px_CSK_Module_MultiRemoteLiDAR">
+											</layout-row>
+											<layout-row id="RowLayout15"
+												style="justify-content: space-between; align-items: center; width: 99%">
+												<davinci-value-display id="VD_EncoderMode" value="Encoder Mode:">
+												</davinci-value-display>
+												<davinci-toggle-switch id="TS_EncoderMode">
 												<crown-edpws-binding property="checked"
 													name="CSK_MultiRemoteLiDAR/OnNewStatusEncoderMode"
 													update-on-resume>
@@ -338,14 +583,14 @@
 													name="CSK_MultiRemoteLiDAR/setEncoderMode"
 													path="param/args/status" auto-commit>
 												</crown-binding>
-											</davinci-toggle-switch>
-										</layout-row>
-										<layout-row id="Placeholder4"
-											class="myCustomMinHeight10px_CSK_Module_MultiRemoteLiDAR">
-										</layout-row>
-										<davinci-collapse id="Collapse:EncoderMode" expanded-title="Hide"
-											collapsed-title="Show config">
-											<layout-row id="RowLayout21">
+												</davinci-toggle-switch>
+											</layout-row>
+											<layout-row id="Placeholder4"
+												class="myCustomMinHeight10px_CSK_Module_MultiRemoteLiDAR">
+											</layout-row>
+											<davinci-collapse id="Collapse:EncoderMode"
+												collapsed-title="Show config" expanded-title="Hide">
+												<layout-row id="RowLayout21">
 												<layout-column id="ColumnLayout23" style="align-items: stretch">
 												<layout-row id="RowLayout18"
 													style="align-items: center; justify-content: space-between">
@@ -437,8 +682,9 @@
 												</crown-binding>
 												</davinci-button>
 												</layout-column>
-											</layout-row>
-										</davinci-collapse>
+												</layout-row>
+											</davinci-collapse>
+										</layout-column>
 									</layout-column>
 								</layout-row>
 							</davinci-tab>
