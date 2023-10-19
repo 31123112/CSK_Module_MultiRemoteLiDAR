@@ -507,12 +507,15 @@ local function updateProcessingParameters()
     if multiRemoteLiDAR_Instances[selectedInstance].parameters.encoderMode == true then
       _G.logger:warning(nameOfModule .. ": Related CROWNs for encoder mode not available.")
     else
-      _G.logger:info(nameOfModule .. ": Related CROWNs for encoder mode not available.")      
+      _G.logger:info(nameOfModule .. ": Related CROWNs for encoder mode not available.")   
     end
   end
 end
-
+------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------
 --filtering
+------------------------------------------------------------------------------------------------
+-- angle filter
 ---@param state bool
 local function setEnableAngleFilter (state)
   _G.logger:info("Instance:".. tostring(selectedInstance) .. " angleFilter Enable :" ..  tostring(state))
@@ -537,6 +540,31 @@ local function setStopAngle (angleString)
  end
 Script.serveFunction('CSK_MultiRemoteLiDAR.setStopAngle', setStopAngle )
 
+------------------------------------------------------------------------------------------------
+-- mean filter
+---@param enableMeanFilterScanDepth bool
+local function setMeanFilterScanDepthEnable (enableMeanFilterScanDepth)
+  _G.logger:info("Instance:".. tostring(selectedInstance) .. " new MeanFilterScanDepthEnable :" .. tostring(enableMeanFilterScanDepth))
+  multiRemoteLiDAR_Instances[selectedInstance].parameters.filtering.meanFilter.enableScanDepth = enableMeanFilterScanDepth
+  Script.notifyEvent('MultiRemoteLiDAR_OnNewProcessingParameter', selectedInstance, 'MeanFilterScanDepthEnable', multiRemoteLiDAR_Instances[selectedInstance].parameters.filtering.meanFilter.enableScanDepth)
+end
+Script.serveFunction('CSK_MultiRemoteLiDAR.setMeanFilterScanDepthEnable', setMeanFilterScanDepthEnable )
+
+---@param filterScanDepthString string
+local function setMeanFilterScanDepth(filterScanDepthString)
+  _G.logger:info("Instance:".. tostring(selectedInstance) .. " new MeanFilterScanDepth :" .. filterScanDepthString)
+  multiRemoteLiDAR_Instances[selectedInstance].parameters.meanFilterScansDepth = tonumber(filterScanDepthString)
+  Script.notifyEvent('MultiRemoteLiDAR_OnNewProcessingParameter', selectedInstance, 'MeanFilterScanDepth', multiRemoteLiDAR_Instances[selectedInstance].parameters.meanFilterScansDepth)
+end
+Script.serveFunction('CSK_MultiRemoteLiDAR.setMeanFilterScanDepth', setMeanFilterScanDepth)
+
+---@param enableMeanFilterBeamsWidth bool
+local function setMeanFilterBeamsWidthEnabled (enableMeanFilterBeamsWidth)
+  _G.logger:info("Instance:".. tostring(selectedInstance) .. " new MeanFilterBeamsWidthEnable :" .. tostring(enableMeanFilterBeamsWidth))
+  multiRemoteLiDAR_Instances[selectedInstance].parameters.filtering.enableBeamsWidth = enableMeanFilterBeamsWidth
+  Script.notifyEvent('MultiRemoteLiDAR_OnNewProcessingParameter', selectedInstance, 'MeanFilterBeamsWidthEnable', multiRemoteLiDAR_Instances[selectedInstance].parameters.filtering.enableBeamsWidth)
+end
+Script.serveFunction('CSK_MultiRemoteLiDAR.setMeanFilterBeamsWidthEnabled', setMeanFilterBeamsWidthEnabled )
 
 
 -- *****************************************************************

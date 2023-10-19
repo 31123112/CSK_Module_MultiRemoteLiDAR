@@ -126,10 +126,14 @@ profileDecoRed:setAxisVisible(true)
 profileDecoRed:setGraphColor(255,0,0,255)
 
 local filter = {}
-
 filter.angleFilter = Scan.AngleRangeFilter.create()
 filter.angleFilter:setThetaRange(math.rad(tonumber(processingParams.filter.angleFilter.startAngle)), math.rad(tonumber(processingParams.filter.angleFilter.stopAngle)))
-filter.angleFilter:setEnabled(true)
+filter.angleFilter:setEnabled(processingParams.filter.angleFilter.enable)
+
+filter.meanFilter = Scan.MeanFilter.create()
+filter.meanFilter:setAverageDepth(tonumber(processingParams.filter.meanFilter.scanDepth))
+filter.meanFilter:setEnabled(processingParams.filter.meanFilter.enableScanDepth)
+
 
 
 --- Function to trigger new scan measurement merged with encoder data
@@ -140,6 +144,52 @@ local function triggerEncoderMeasurement()
   incOffset = encoderHandle:getCurrentIncrement()
   encoderCycle = false
   doEncoderMeasurement = true
+end
+
+local function meanFilterBeamsWidth(pc)
+  -- local size = Scan.getBeamCount(scan)
+  -- -- erster Beam
+  -- local distance, theta, phi = Scan.getPoint(scan, 0)
+  -- local distanceN1, thetaN1, phiN1 = Scan.getPoint(scan, 0+1)
+  -- local distanceN2, thetaN2, phiN2 = Scan.getPoint(scan, 0+2)
+  -- local meanDistance = ( distance + distanceN1 + distanceN2 ) /3
+  -- Scan.setPoint(scan, 0, 0, meanDistance, theta, phi)
+
+  -- for i=0, (size -3) do
+  --   -- alle weiteren Beams
+  --   local distance, theta, phi = Scan.getPoint(scan, i)
+  --   local distanceN1, thetaN1, phiN1 = Scan.getPoint(scan, i+1)
+  --   local distanceN2, thetaN2, phiN2 = Scan.getPoint(scan, i+2)
+  --   local meanDistance = ( distance + distanceN1 + distanceN2 ) /3
+  --   Scan.setPoint(scan, i+1, i+1, meanDistance, thetaN1, phiN1)
+  -- end
+
+  -- -- letzter Beam
+  -- local distance, theta, phi = Scan.getPoint(scan, size - 3)
+  -- local distanceN1, thetaN1, phiN1 = Scan.getPoint(scan, size - 2)
+  -- local distanceN2, thetaN2, phiN2 = Scan.getPoint(scan, size - 1)
+  -- local meanDistance = ( distance + distanceN1 + distanceN2 ) /3
+  -- Scan.setPoint(scan, size-1, size -1, meanDistance, thetaN2, phiN2)
+
+  local filteredPC = PointCloud.create()
+  local bx,cx
+  local size = ( pc:getSize() -1)
+  for i=1, size do
+    local ax,ay = pc:getPoint(i)
+      if i < size  then
+        bx,_ = pc:getPoint(i-1)
+        cx,_= pc:getPoint(i+1)
+      else
+        bx,_ = pc:getPoint(i-1)
+        cx,_ = pc:getPoint(i-2)
+      end
+    local mean = (ax + bx + cx ) /3
+    PointCloud.appendPoint(filteredPC,mean, ay, 0, 50)
+  end
+  local pc = nil
+  pc = PointCloud.clone(filteredPC)
+
+  return pc
 end
 
 local function encoderMode(scan)
@@ -189,81 +239,76 @@ end
 --- Function to process scans
 ---@param scan Scan Incoming scan to process
 local function handleOnNewProcessing(scan)
-  _G.logger:info(nameOfModule .. ': Check scan on instance No.' .. lidarInstanceNumberString) -- for debugging
+  
   
   -------------
-  --filtering
+  --angle filter
+  scan = filter.angleFilter:filter(scan)
 
-  if processingParams.filter.angleFilter.enable then
-    scan = filter.angleFilter:filter(scan)
-    print("anglefilter active")
-  end
+  --mean filter scans depth
+  scan = filter.meanFilter:filter(scan)
   -----------
 
-  if processingParams.encoderMode then
-    encoderMode(scan)
+  
 
-  elseif processingParams.viewerType == 'PointCloud' then
-    local pc = transformer:transformToPointCloud(scan)
-    if processingParams.sensorType == 'MRS1000' then
-      if beamCounter <= 4 then
-        pcCollector:collect(pc, true)
-        beamCounter = beamCounter + 1
+
+  if scan then
+    
+
+    _G.logger:info(nameOfModule .. ': new scan on instance No.' .. lidarInstanceNumberString) -- for debugging
+    if processingParams.encoderMode then
+      encoderMode(scan)
+
+    elseif processingParams.viewerType == 'PointCloud' then
+      local pc = transformer:transformToPointCloud(scan)
+      -- mean filter beams width
+      if processingParams.filter.meanFilter.enableBeamsWidth then
+        pc = meanFilterBeamsWidth(pc)
+      end
+      if processingParams.sensorType == 'MRS1000' then
+        if beamCounter <= 4 then
+          pcCollector:collect(pc, true)
+          beamCounter = beamCounter + 1
+        else
+          fullPc = pcCollector:collect(pc, false)
+          if processingParams.viewerActive then
+            viewer:addPointCloud(fullPc, pcDeco)
+            viewer:present()
+          end
+          beamCounter = 1
+        end
       else
-        fullPc = pcCollector:collect(pc, false)
         if processingParams.viewerActive then
-          viewer:addPointCloud(fullPc, pcDeco)
+          print("test")
+          viewer:addPointCloud(pc, pcDeco, 'pc1')
           viewer:present()
         end
-        beamCounter = 1
       end
-    else
-      if processingParams.viewerActive then
-        print("test")
-        viewer:addPointCloud(pc, pcDeco, 'pc1')
-        viewer:present()
+    elseif processingParams.viewerType == 'Scan' then
+      if processingParams.sensorType == 'MRS1000' then
+        if processingParams.viewerActive then
+          scanViewer:addScan(scan,scanDecos[beamCounter],'scan' .. tostring(beamCounter))
+          scanViewer:present()
+        end
+        beamCounter = beamCounter + 1
+        if beamCounter >= 5 then
+          beamCounter = 1
+        end
+      else
+        if processingParams.viewerActive then
+          print("Test scan")
+          scanViewer:addScan(scan, scanDecos[1], 'scan1')
+          scanViewer:present()
+        end
       end
-    end
-  elseif processingParams.viewerType == 'Scan' then
-    if processingParams.sensorType == 'MRS1000' then
-      if processingParams.viewerActive then
-        scanViewer:addScan(scan,scanDecos[beamCounter],'scan' .. tostring(beamCounter))
-        scanViewer:present()
-      end
-      beamCounter = beamCounter + 1
-      if beamCounter >= 5 then
-        beamCounter = 1
-      end
-    else
-      if processingParams.viewerActive then
-        print("Test scan")
-        scanViewer:addScan(scan, scanDecos[1], 'scan1')
-        scanViewer:present()
-      end
-    end
-  else --Profile
-    print("profile")
-    local profile = Scan.toProfile(scan, 'DISTANCE', 0)
+    else --Profile
+      print("profile")
+      local profile = Scan.toProfile(scan, 'DISTANCE', 0)
     
-    profileViewer:addProfile(profile, profileDecoRed, "profile")
-    profileViewer:present()
+      profileViewer:addProfile(profile, profileDecoRed, "profile")
+      profileViewer:present()
+    end
   end
-
-  -- Insert processing part
-  -- E.g.
-  --[[
-
-  local result = someProcessingFunctions(scan)
-
-  -- ...
-
-  Script.notifyEvent("MultiRemoteLiDAR_OnNewValueUpdate" .. lidarInstanceNumberString, lidarInstanceNumber, 'valueName', result, processingParams.selectedObject)
-
-  --_G.logger:info(nameOfModule .. ": Processing on MultiRemoteLiDAR" .. lidarInstanceNumberString .. " was = " .. tostring(result))
-  --Script.notifyEvent('MultiRemoteLiDAR_OnNewResult'.. lidarInstanceNumberString, true)
-
-  --Script.notifyEvent("MultiRemoteLiDAR_OnNewValueToForward" .. lidarInstanceNumberString, 'MultiColorSelection_CustomEventName', 'content')
-  ]]
 end
 --Script.serveFunction("CSK_MultiRemoteLiDAR.processInstance"..lidarInstanceNumberString, handleOnNewProcessing, 'object:?:Alias', 'bool:?') -- Edit this according to this function
 
@@ -352,6 +397,7 @@ local function handleOnNewProcessingParameter(multiRemoteLiDARNo,parameter,value
       processingParams.encoderTriggerEvent = value
       Script.register(value, triggerEncoderMeasurement)
     else
+      --angle filter
       if parameter == 'AngleFilterStartAngle' then
         processingParams.filter.angleFilter.startAngle = value
         _G.logger:info('instance ' ..lidarInstanceNumberString .. ' on new Anglefilter ' .. tostring(processingParams.filter.angleFilter.startAngle))
@@ -363,7 +409,25 @@ local function handleOnNewProcessingParameter(multiRemoteLiDARNo,parameter,value
       elseif parameter == 'AngleFilterEnable' then
         _G.logger:info('instance ' ..lidarInstanceNumberString .. ' on new Anglefilter enable state ' .. tostring(value))
         processingParams.filter.angleFilter.enable = value
+        filter.angleFilter:setEnabled(processingParams.filter.angleFilter.enable)
+      -- mean filter
+      elseif parameter == 'MeanFilterScanDepthEnable' then
+        _G.logger:info('instance ' ..lidarInstanceNumberString .. ' on new mean filter scan depth ' .. tostring(value))
+        processingParams.filter.meanFilter.enableScanDepth = value
+        filter.meanFilter:setEnabled(processingParams.filter.meanFilter.enableScanDepth)
+      elseif parameter == 'MeanFilterScanDepth' then
+        _G.logger:info('instance ' ..lidarInstanceNumberString .. ' on new mean filter scan depth ' .. tostring(value))
+        processingParams.filter.meanFilter.scanDepth = value
+        filter.meanFilter:setAverageDepth(tonumber(processingParams.filter.meanFilter.scanDepth))
+      elseif parameter == 'MeanFilterBeamsWidthEnable' then
+        _G.logger:info('instance ' ..lidarInstanceNumberString .. ' on new mean filter beams width ' .. tostring(value))
+        processingParams.filter.meanFilter.enableBeamsWidth = value
+      elseif parameter == 'MeanFilterBeamsWidth' then
+        _G.logger:info('instance ' ..lidarInstanceNumberString .. ' on new mean filter beams width ' .. tostring(value))
+        processingParams.filter.meanFilter.beamsWidth = value
       end
+
+
       if parameter == 'viewerActive' and value == false then
         viewer:clear()
         viewer:present()

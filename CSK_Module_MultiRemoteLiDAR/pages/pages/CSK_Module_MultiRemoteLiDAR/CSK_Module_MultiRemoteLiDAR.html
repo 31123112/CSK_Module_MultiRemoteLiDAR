@@ -388,6 +388,13 @@
 												<layout-column id="ColumnLayout40" style="align-items: stretch">
 												<davinci-checkbox id="Checkbox1">
 												<span></span>
+												<crown-set event="change"
+													crown-function="CSK_MultiRemoteLiDAR/setMeanFilterScanDepthEnable"
+													protocol="crownMSGPACK" crown-path="enableMeanFilterScanDepth">
+												</crown-set>
+												<crown-on property="checked"
+													crown-event="CSK_MultiRemoteLiDAR/OnNewStatusMeanFilterScans">
+												</crown-on>
 												</davinci-checkbox>
 												</layout-column>
 												<layout-column id="ColumnLayout29" style="align-items: stretch">
@@ -403,6 +410,10 @@
 												<crown-on property="value"
 													crown-event="CSK_MultiRemoteLiDAR/OnNewValueMeanFilterScans">
 												</crown-on>
+												<crown-set event="change"
+													crown-function="CSK_MultiRemoteLiDAR/setMeanFilterScanDepth"
+													protocol="crownMSGPACK" crown-path="filterScanDepthString">
+												</crown-set>
 												</davinci-number-input>
 												</layout-column>
 												</layout-row>
@@ -415,6 +426,10 @@
 												<crown-on property="checked"
 													crown-event="CSK_MultiRemoteLiDAR/OnNewStatusMeanFilterBeams">
 												</crown-on>
+												<crown-set event="change"
+													crown-function="CSK_MultiRemoteLiDAR/setMeanFilterBeamsWidthEnabled"
+													protocol="crownMSGPACK" crown-path="enableMeanFilterBeamsWidth">
+												</crown-set>
 												</davinci-checkbox>
 												</layout-column>
 												<layout-column id="ColumnLayout52">

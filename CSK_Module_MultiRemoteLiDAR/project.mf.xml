@@ -394,6 +394,18 @@ IMPORTANT: As instances start their own threads, the module needs to be restarte
                     <desc/>
                     <param desc="" multiplicity="1" name="angleString" type="string"/>
                 </function>
+                <function name="setMeanFilterScanDepthEnable">
+                    <desc/>
+                    <param desc="" multiplicity="1" name="enableMeanFilterScanDepth" type="bool"/>
+                </function>
+                <function name="setMeanFilterScanDepth">
+                    <desc/>
+                    <param desc="" multiplicity="1" name="filterScanDepthString" type="string"/>
+                </function>
+                <function name="setMeanFilterBeamsWidthEnabled">
+                    <desc/>
+                    <param desc="" multiplicity="1" name="enableMeanFilterBeamsWidth" type="bool"/>
+                </function>
             </serves>
         </crown>
         <meta key="author">SICK AG</meta>
