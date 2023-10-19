@@ -456,6 +456,10 @@
 												<crown-on property="checked"
 													crown-event="CSK_MultiRemoteLiDAR/OnNewStatusResolutionHalving">
 												</crown-on>
+												<crown-set event="change"
+													crown-function="CSK_MultiRemoteLiDAR/setResolutionHalvingEnable"
+													protocol="crownMSGPACK" crown-path="state">
+												</crown-set>
 												</davinci-checkbox>
 												</layout-column>
 												<layout-column id="ColumnLayout56">

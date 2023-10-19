@@ -265,6 +265,18 @@ local function handleOnNewProcessing(scan)
       if processingParams.filter.meanFilter.enableBeamsWidth then
         pc = meanFilterBeamsWidth(pc)
       end
+
+      if processingParams.filter.resolutionHalving.enable then
+          local filteredPC = PointCloud.create()
+          local k =0
+          local factor =2
+          while k <= (pc:getSize()-1) do
+            filteredPC:appendPoint(pc:getPoint(k))
+            k=k+factor
+          end
+          pc = filteredPC
+      end
+
       if processingParams.sensorType == 'MRS1000' then
         if beamCounter <= 4 then
           pcCollector:collect(pc, true)
@@ -425,6 +437,10 @@ local function handleOnNewProcessingParameter(multiRemoteLiDARNo,parameter,value
       elseif parameter == 'MeanFilterBeamsWidth' then
         _G.logger:info('instance ' ..lidarInstanceNumberString .. ' on new mean filter beams width ' .. tostring(value))
         processingParams.filter.meanFilter.beamsWidth = value
+      --resolution halving
+      elseif parameter == 'ResolutionHalvingEnabled' then
+        _G.logger:info('instance ' ..lidarInstanceNumberString .. ' on new resolution halving ' .. tostring(value))
+        processingParams.filter.resolutionHalving.enable = value
       end
 
 

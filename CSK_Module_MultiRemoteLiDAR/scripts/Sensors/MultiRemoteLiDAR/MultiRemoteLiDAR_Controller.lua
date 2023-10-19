@@ -566,6 +566,13 @@ local function setMeanFilterBeamsWidthEnabled (enableMeanFilterBeamsWidth)
 end
 Script.serveFunction('CSK_MultiRemoteLiDAR.setMeanFilterBeamsWidthEnabled', setMeanFilterBeamsWidthEnabled )
 
+---@param state bool
+local function setResolutionHalvingEnable (state)
+  _G.logger:info("Instance:".. tostring(selectedInstance) .. " new ResolutionHalvingEnabled :" .. tostring(state))
+  multiRemoteLiDAR_Instances[selectedInstance].parameters.filtering.resolutionHalving.enable = state
+  Script.notifyEvent('MultiRemoteLiDAR_OnNewProcessingParameter', selectedInstance, 'ResolutionHalvingEnabled', multiRemoteLiDAR_Instances[selectedInstance].parameters.filtering.resolutionHalving.enable)
+end
+Script.serveFunction('CSK_MultiRemoteLiDAR.setResolutionHalvingEnable', setResolutionHalvingEnable )
 
 -- *****************************************************************
 -- Following function can be adapted for CSK_PersistentData module usage

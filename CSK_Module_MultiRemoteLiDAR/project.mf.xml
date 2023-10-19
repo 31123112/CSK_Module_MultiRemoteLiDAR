@@ -406,6 +406,10 @@ IMPORTANT: As instances start their own threads, the module needs to be restarte
                     <desc/>
                     <param desc="" multiplicity="1" name="enableMeanFilterBeamsWidth" type="bool"/>
                 </function>
+                <function name="setResolutionHalvingEnable">
+                    <desc/>
+                    <param desc="" multiplicity="1" name="state" type="bool"/>
+                </function>
             </serves>
         </crown>
         <meta key="author">SICK AG</meta>
