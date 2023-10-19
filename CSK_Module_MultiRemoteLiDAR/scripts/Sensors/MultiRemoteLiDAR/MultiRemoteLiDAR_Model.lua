@@ -53,11 +53,11 @@ function multiRemoteLiDAR.create(multiRemoteLiDARInstanceNo)
     -- Parameters to be saved permanently if wanted
     self.parameters = {}
     self.parameters.interface = 'ETHERNET' -- Interface connection type to the sensor
-    self.parameters.ipAddress = '192.168.1.10' ..  self.multiRemoteLiDARInstanceNoString -- IP of the LiDAR sensor
+    self.parameters.ipAddress = '192.168.136.1' ..  self.multiRemoteLiDARInstanceNoString -- IP of the LiDAR sensor
     self.parameters.sensorType = 'LMSX00' --'LMSX00' -- LiDAR type
     self.parameters.processingFile = 'CSK_MultiRemoteLiDAR_Processing' -- which file to use for processing (will be started in own thread)
     self.parameters.internalProcessing = true -- should incoming scans be processed within this module or just provided for others
-    self.parameters.viewerType = 'Scan' -- 'Scan' / 'PointCloud' - type of viewer to show data
+    self.parameters.viewerType = 'PointCloud' -- 'Scan' / 'PointCloud' - type of viewer to show data
     self.parameters.viewerActive = true -- Should the scan be shown in viewer
     self.parameters.encoderMode = false -- Combine scan data with encoder data to create point cloud
     self.parameters.encoderTriggerEvent = '' -- Event to start the encoder scan measurement
@@ -153,7 +153,7 @@ function multiRemoteLiDAR:setConfig()
 
   self.lidarProvider = Scan.Provider.RemoteScanner.create()
 
-  self.lidarProvider:setInterface(self.parameters.interface)
+  --self.lidarProvider:setInterface(self.parameters.interface)
 
   if self.parameters.interface == 'ETHERNET' then
     self.lidarProvider:setIPAddress(self.parameters.ipAddress)
@@ -165,7 +165,6 @@ function multiRemoteLiDAR:setConfig()
   else
     self.lidarProvider:setSensorType(self.parameters.sensorType)
   end
-
   self.lidarProvider:start()
 end
 

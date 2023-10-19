@@ -382,6 +382,18 @@ IMPORTANT: As instances start their own threads, the module needs to be restarte
                     <desc>Function to set event to start encoder measurement if notified.</desc>
                     <param desc="Name of event" multiplicity="1" name="event" type="string"/>
                 </function>
+                <function name="setEnableAngleFilter">
+                    <desc/>
+                    <param desc="" multiplicity="1" name="state" type="bool"/>
+                </function>
+                <function name="setStartAngle">
+                    <desc/>
+                    <param desc="" multiplicity="1" name="angleString" type="string"/>
+                </function>
+                <function name="setStopAngle">
+                    <desc/>
+                    <param desc="" multiplicity="1" name="angleString" type="string"/>
+                </function>
             </serves>
         </crown>
         <meta key="author">SICK AG</meta>

@@ -512,6 +512,33 @@ local function updateProcessingParameters()
   end
 end
 
+--filtering
+---@param state bool
+local function setEnableAngleFilter (state)
+  _G.logger:info("Instance:".. tostring(selectedInstance) .. " angleFilter Enable :" ..  tostring(state))
+  multiRemoteLiDAR_Instances[selectedInstance].parameters.filtering.angleFilter.enable = state
+  Script.notifyEvent('MultiRemoteLiDAR_OnNewProcessingParameter', selectedInstance, 'AngleFilterEnable', multiRemoteLiDAR_Instances[selectedInstance].parameters.filtering.angleFilter.enable)
+end
+Script.serveFunction('CSK_MultiRemoteLiDAR.setEnableAngleFilter', setEnableAngleFilter )
+
+---@param angleString string
+local function setStartAngle (angleString)
+  _G.logger:info("Instance:".. tostring(selectedInstance) .. " new startAngle :" .. angleString)
+  multiRemoteLiDAR_Instances[selectedInstance].parameters.filtering.angleFilter.startAngle = tonumber(angleString)
+  Script.notifyEvent('MultiRemoteLiDAR_OnNewProcessingParameter', selectedInstance, 'AngleFilterStartAngle', multiRemoteLiDAR_Instances[selectedInstance].parameters.filtering.angleFilter.startAngle)
+  end
+Script.serveFunction('CSK_MultiRemoteLiDAR.setStartAngle', setStartAngle )
+
+---@param angleString string
+local function setStopAngle (angleString)
+  _G.logger:info("Instance:".. tostring(selectedInstance) .. " new stopAngle :" .. angleString)
+  multiRemoteLiDAR_Instances[selectedInstance].parameters.filtering.angleFilter.stopAngle = tonumber(angleString)
+  Script.notifyEvent('MultiRemoteLiDAR_OnNewProcessingParameter', selectedInstance, 'AngleFilterStopAngle', multiRemoteLiDAR_Instances[selectedInstance].parameters.filtering.angleFilter.stopAngle)
+ end
+Script.serveFunction('CSK_MultiRemoteLiDAR.setStopAngle', setStopAngle )
+
+
+
 -- *****************************************************************
 -- Following function can be adapted for CSK_PersistentData module usage
 -- *****************************************************************

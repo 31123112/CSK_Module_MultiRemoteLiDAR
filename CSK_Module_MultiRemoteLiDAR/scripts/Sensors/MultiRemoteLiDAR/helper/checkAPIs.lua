@@ -18,6 +18,11 @@ local function loadAPIs()
   View = require 'API.View'
   View.PointCloudDecoration = require 'API.View.PointCloudDecoration'
   View.ScanDecoration = require 'API.View.ScanDecoration'
+  View.GraphDecoration = require("API.View.GraphDecoration")
+  View.ShapeDecoration = require 'API.View.ShapeDecoration'
+  View.TextDecoration = require 'API.View.TextDecoration'
+  Point = require 'API.Point'
+  Shape3D = require 'API.Shape3D'
 
   -- Check if related CSK modules are available to be used
   local appList = Engine.listApps()
@@ -39,6 +44,9 @@ local function loadScannerAPIs()
   Scan.Provider = {}
   Scan.Provider.RemoteScanner = require 'API.Scan.Provider.RemoteScanner'
   Scan.Transform = require 'API.Scan.Transform'
+  Scan.MeanFilter = require 'API.Scan.MeanFilter'
+  Scan.MedianFilter = require 'API.Scan.MedianFilter'
+  Scan.AngleRangeFilter = require 'API.Scan.AngleRangeFilter'
 end
 
 local function loadEncoderAPIs()

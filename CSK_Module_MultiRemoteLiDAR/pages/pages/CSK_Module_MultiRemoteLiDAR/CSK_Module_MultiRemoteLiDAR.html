@@ -4,9 +4,12 @@
             <davinci-option id="Option7" value="Scan">
                 <span>Scan</span>
             </davinci-option>
-            <davinci-option id="Option8" value="PointCloud">
-                <span>PointCloud</span>
-            </davinci-option>
+			<davinci-option id="Option11" value="PointCloud">
+				<span>PointCloud</span>
+			</davinci-option>
+			<davinci-option id="Option8" value="Profile">
+				<span>Profile</span>
+			</davinci-option>
             <crown-edpws-binding property="value" name="CSK_MultiRemoteLiDAR/OnNewStatusViewerType" update-on-resume>
             </crown-edpws-binding>
             <crown-binding event="change" name="CSK_MultiRemoteLiDAR/setViewerType" path="param/args/viewerType"
@@ -51,6 +54,13 @@
             </stacked-pane>
             <crown-edpws-binding property="value" name="CSK_MultiRemoteLiDAR/OnNewStatusViewerType" update-on-resume>
             </crown-edpws-binding>
+			<stacked-pane id="StackedPane3" value="Profile">
+				<davinci-scan-viewer-as id="ScanViewerAS3" grid-size="10"
+					grid-font-size="5" background-color="0xffffff"
+					shape-editor="bounding-box" viewer-id="Profile"
+					style="width: 980px; height: 99%">
+				</davinci-scan-viewer-as>
+			</stacked-pane>
         </stacked-view>
     </layout-column>
     <layout-column id="ColumnLayout2" style="align-items: stretch">
@@ -334,6 +344,10 @@
 												<crown-on property="checked"
 													crown-event="CSK_MultiRemoteLiDAR/OnNewStatusAngleFilter">
 												</crown-on>
+												<crown-set event="change"
+													crown-function="CSK_MultiRemoteLiDAR/setEnableAngleFilter"
+													protocol="crownMSGPACK" crown-path="state">
+												</crown-set>
 												</davinci-checkbox>
 												</layout-column>
 												<layout-column id="ColumnLayout39">
@@ -347,6 +361,10 @@
 												<crown-on property="value"
 													crown-event="CSK_MultiRemoteLiDAR/OnNewValueAngleFilterStartAngle">
 												</crown-on>
+												<crown-set event="change"
+													crown-function="CSK_MultiRemoteLiDAR/setStartAngle"
+													protocol="crownMSGPACK" crown-path="angleString">
+												</crown-set>
 												</davinci-number-input>
 												</layout-column>
 												<layout-column id="ColumnLayout28" style="align-items: stretch">
@@ -356,6 +374,10 @@
 												<crown-on property="value"
 													crown-event="CSK_MultiRemoteLiDAR/OnNewValueAngleFilterStopAngle">
 												</crown-on>
+												<crown-set event="change"
+													crown-function="CSK_MultiRemoteLiDAR/setStopAngle"
+													protocol="crownMSGPACK" crown-path="angleString">
+												</crown-set>
 												</davinci-number-input>
 												</layout-column>
 												</layout-row>
@@ -397,12 +419,12 @@
 												</layout-column>
 												<layout-column id="ColumnLayout52">
 												<davinci-value-display id="ValueDisplay14"
-													value="Mean-Filter over 3 Beams">
+													value="Mean-Filter over n Beams">
 												</davinci-value-display>
 												</layout-column>
 												<layout-column id="ColumnLayout53"></layout-column>
 												<layout-column id="ColumnLayout54">
-												<davinci-number-input id="NumberInput7" step="1" max="20" min="0"
+												<davinci-number-input id="NumberInput7" step="1" max="3" min="3"
 													label="Depth">
 												<crown-on property="value"
 													crown-event="CSK_MultiRemoteLiDAR/OnNewValueMeanFilterBeams">
