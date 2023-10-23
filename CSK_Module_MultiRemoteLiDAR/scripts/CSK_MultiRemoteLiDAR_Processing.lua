@@ -95,6 +95,12 @@ local scanQueue = Script.Queue.create() -- Queue to stop processing if increasin
 scanQueue:setPriority('MID')
 scanQueue:setMaxQueueSize(1)
 
+local fitterHandle = PointCloud.ShapeFitter.create()
+fitterHandle:setOptimizeCoefficients(true)
+fitterHandle:setDistanceThreshold(15)
+fitterHandle:setMaxIterations(100) --default 100
+fitterHandle:setProbability(0.90)
+
 local scanDecos = {}
 
 for i = 1, 4 do
@@ -103,6 +109,38 @@ for i = 1, 4 do
   deco:setColor(i * 50, i * 50, i * 50)
   table.insert(scanDecos, deco)
 end
+
+local shapeDecos = {}
+
+shapeDecos.red = View.ShapeDecoration.create()
+shapeDecos.red:setFillColor(255,0,0, 150)
+shapeDecos.red:setLineColor(255,0,0, 150)
+shapeDecos.red:setPointSize(25)
+
+shapeDecos.lightRed = View.ShapeDecoration.create()
+shapeDecos.lightRed:setFillColor(180,0,0, 150)
+shapeDecos.lightRed:setLineColor(180,0,0, 150)
+shapeDecos.lightRed:setPointSize(25)
+
+shapeDecos.green = View.ShapeDecoration.create()
+shapeDecos.green:setFillColor(0,255,0, 150)
+shapeDecos.green:setLineColor(0,255,0, 150)
+shapeDecos.green:setPointSize(25)
+
+shapeDecos.lightGreen = View.ShapeDecoration.create()
+shapeDecos.lightGreen:setFillColor(0,180,0, 150)
+shapeDecos.lightGreen:setLineColor(0,180,0, 150)
+shapeDecos.lightGreen:setPointSize(25)
+
+shapeDecos.blue = View.ShapeDecoration.create()
+shapeDecos.blue:setFillColor(0,0,255, 150)
+shapeDecos.blue:setLineColor(0,0,255, 150)
+shapeDecos.blue:setPointSize(25)
+
+shapeDecos.lightBlue = View.ShapeDecoration.create()
+shapeDecos.lightBlue:setFillColor(0,0,180, 100)
+shapeDecos.lightBlue:setLineColor(0,0,180, 100)
+shapeDecos.lightBlue:setPointSize(25)
 
 local transformer = Scan.Transform.create()
 
@@ -144,6 +182,158 @@ local function triggerEncoderMeasurement()
   incOffset = encoderHandle:getCurrentIncrement()
   encoderCycle = false
   doEncoderMeasurement = true
+end
+
+local function measure(pointCloud, direction)
+  local testPointcloud = PointCloud.create('INTENSITY')
+  local xPoint,yPoint,zPoint,intensityPoint = pointCloud:getPoint(0) -- punkt 1
+  if direction == "up" then
+    xPoint,yPoint,zPoint,intensityPoint = pointCloud:getPoint(0) -- punkt 1
+  elseif direction == "down" then
+    xPoint,yPoint,zPoint,intensityPoint = pointCloud:getPoint(pointCloud:getSize()-1) -- punkt 1
+  end
+  testPointcloud:appendPoint(xPoint, yPoint, zPoint, intensityPoint) -- punkt 1 in PointCloud einfügen
+
+  xPoint,yPoint,zPoint,intensityPoint = pointCloud:getPoint(1) -- punkt 1
+  if direction == "up" then
+    xPoint,yPoint,zPoint,intensityPoint = pointCloud:getPoint(1) -- punkt 1
+  elseif direction == "down" then
+    xPoint,yPoint,zPoint,intensityPoint = pointCloud:getPoint(pointCloud:getSize()-2) -- punkt 1
+  end
+  testPointcloud:appendPoint(xPoint, yPoint, zPoint, intensityPoint) -- punkt 1 in PointCloud einfügen
+
+  local outputPointcloud = PointCloud.create('INTENSITY')
+  local enablePoint = true
+  local indexCornerPoint = 2
+  local cornerPoint = nil
+  local lineErrektor,_ = PointCloud.ShapeFitter.fitLine(fitterHandle, testPointcloud)
+  for i = 2, pointCloud:getSize() - 2 do
+    if enablePoint then
+      if direction == "up" then
+        xPoint,yPoint,zPoint,intensityPoint = pointCloud:getPoint(i)
+      elseif direction == "down" then
+        xPoint,yPoint,zPoint,intensityPoint = pointCloud:getPoint(pointCloud:getSize() - i)
+      end
+      local testPoint = Point.create(xPoint,yPoint,zPoint)
+      local lastPointX, _,_,_ = PointCloud.getPoint(testPointcloud, i-1)
+      if math.abs(Point.getDistanceToLine(testPoint, lineErrektor)) < processingParams.measuring.edgeDetection.gradientThreshold then
+        testPointcloud:appendPoint(xPoint, yPoint, zPoint, intensityPoint)
+        indexCornerPoint = i
+        outputPointcloud:appendPoint(xPoint+100,yPoint,zPoint,intensityPoint)
+        lineErrektor,_ = PointCloud.ShapeFitter.fitLine(fitterHandle, testPointcloud)
+      else
+        if direction == "up" then
+          xPoint,yPoint,zPoint,intensityPoint = pointCloud:getPoint(i+1)
+        elseif direction == "down" then
+          xPoint,yPoint,zPoint,intensityPoint = pointCloud:getPoint(pointCloud:getSize() - (i+1))
+        end
+        testPoint = Point.create(xPoint,yPoint,zPoint)
+        if math.abs(Point.getDistanceToLine(testPoint, lineErrektor)) > processingParams.measuring.edgeDetection.gradientThreshold then
+          if direction == "up" then
+            xPoint,yPoint,zPoint,intensityPoint = pointCloud:getPoint(i-1)
+          elseif direction == "down" then
+            if i > 2 then
+              xPoint,yPoint,zPoint,intensityPoint = pointCloud:getPoint(pointCloud:getSize() - (i-1))
+              
+            else
+              xPoint,yPoint,zPoint,intensityPoint = pointCloud:getPoint(pointCloud:getSize() - (i))
+            end
+          end
+          if lineErrektor then
+            cornerPoint = Shape3D.getClosestSurfacePoint(lineErrektor, Point.create(xPoint, yPoint, zPoint)) -- letzter punkt = Eckpunkt
+          else
+            cornerPoint = Point.create(xPoint, yPoint, zPoint) -- letzter punkt = Eckpunkt
+          end
+          
+          enablePoint = false
+        else
+          print("only a peak by" .. tostring(i) .. "/" .. tostring(pointCloud:getSize()-1))
+          testPointcloud:appendPoint(xPoint, yPoint, zPoint, intensityPoint)
+          outputPointcloud:appendPoint(xPoint+100,yPoint,zPoint,intensityPoint)
+        end
+      end
+    else
+      return outputPointcloud, cornerPoint
+    end
+  end
+  return outputPointcloud, cornerPoint
+end
+
+local function edgeDetection(pointcloud, gradientThreshold, gabThreshold)
+  local edgeDetectionGab, edgeDetectionHeight, edgeDetectionAngle = nil, nil, nil
+  local pcA, cornerPointA= measure(pointcloud,"up")
+  local pcB, cornerPointB = measure(pointcloud,"down")
+
+  local x,y,z,_ = PointCloud.getPoint(pointcloud, 0)
+  local startPoint = Point.create(x,y,z)
+  local size, width, height = pointcloud:getSize()
+  x,y,z,_ = PointCloud.getPoint(pointcloud, size-1)
+  local stoppPoint = Point.create(x,y,z)
+
+  if cornerPointA and cornerPointB then
+    if cornerPointA:getY() <= 0 and cornerPointB:getY() <=0 then
+      edgeDetectionGab = math.abs(math.abs(cornerPointA:getY()) - math.abs(cornerPointA:getY()))
+    elseif (cornerPointA:getY() <= 0 and cornerPointB:getY() >=0) or (cornerPointA:getY() >= 0 and cornerPointB:getY() <=0) then
+      edgeDetectionGab = math.abs(math.abs(cornerPointA:getY()) + math.abs(cornerPointB:getY()))
+    else
+      edgeDetectionGab = math.abs(math.abs(cornerPointA:getY()) - math.abs(cornerPointB:getY()) )
+    end
+    edgeDetectionHeight = math.abs(cornerPointA:getX()) - math.abs(cornerPointB:getX())
+    local correctionGab = (math.sin(math.rad(1))*cornerPointA:getX())/2
+    edgeDetectionGab = edgeDetectionGab - correctionGab
+
+    if edgeDetectionGab < gabThreshold then
+      edgeDetectionGab = -9999
+      edgeDetectionHeight = -9999
+    end
+    --angle
+    local mErrektor, mTuebbing, zaehler
+    if cornerPointErrektor and cornerPointTuebbing then
+      if startPoint:getY() < 0 and cornerPointB:getY() < 0 then
+        zaehler = (math.abs(  startPoint:getY() ) - math.abs( cornerPointB:getY()  ))
+      elseif startPoint:getY() < 0 and cornerPointB:getY() > 0 then
+        zaehler = math.abs( startPoint:getY() - cornerPointB:getY() )
+      elseif startPoint:getY() > 0 and cornerPointB:getY() < 0 then
+        zaehler = startPoint:getY() - cornerPointB:getY()
+      elseif startPoint:getY() > 0 and cornerPointB:getY() > 0 then
+        zaehler = (startPoint:getY() - cornerPointB:getY())
+      end
+              
+      if zaehler == 0 then
+        mErrektor = 0
+      else
+        mErrektor =(startPoint:getX() - cornerPointErrektor:getX()) / zaehler
+      end
+      print(mErrektor)
+      if cornerPointA:getY() < 0 and stoppPoint:getY() < 0 then
+        zaehler = (math.abs(  cornerPointA:getY() ) - math.abs( stoppPoint:getY()  ))
+      elseif cornerPointA:getY() < 0 and stoppPoint:getY() > 0 then
+        zaehler = math.abs( cornerPointA:getY() - stoppPoint:getY() )
+      elseif cornerPointA:getY() > 0 and stoppPoint:getY() < 0 then
+        zaehler = cornerPointA:getY() - stoppPoint:getY()
+      elseif cornerPointA:getY() > 0 and stoppPoint:getY() > 0 then
+        zaehler = (cornerPointA:getY() - stoppPoint:getY())
+      end
+
+      if zaehler == 0 then
+        mErrektor = 0
+      else
+        mTuebbing =(cornerPointTuebbing:getX() - stoppPoint:getX()) / zaehler
+      end
+
+      local nenner = (mTuebbing - mErrektor)
+      zaehler = (1 + (mErrektor * mTuebbing))
+      edgeDetectionAngle = math.deg(math.atan(math.abs(nenner /zaehler )))
+      print("Angle : " .. tostring(angle))
+    end
+  end
+  return edgeDetectionGab, edgeDetectionHeight, edgeDetectionAngle, cornerPointA, cornerPointB
+end
+
+local function fixedPoint(pointcloud, scanAngleA, scanAngleB)
+  local fixedPointHeight = nil
+
+  return fixedPointHeight
 end
 
 local function meanFilterBeamsWidth(pc)
@@ -248,13 +438,7 @@ local function handleOnNewProcessing(scan)
   --mean filter scans depth
   scan = filter.meanFilter:filter(scan)
   -----------
-
-  
-
-
   if scan then
-    
-
     _G.logger:info(nameOfModule .. ': new scan on instance No.' .. lidarInstanceNumberString) -- for debugging
     if processingParams.encoderMode then
       encoderMode(scan)
@@ -277,6 +461,31 @@ local function handleOnNewProcessing(scan)
           pc = filteredPC
       end
 
+
+      --------------------------------------------------------------------------------------
+      --measuring
+
+      local edgeDetectionGab, edgeDetectionHeight, edgeDetectionAngle, cornerPointA, cornerPointB = nil, nil, nil, nil, nil
+      print("here")
+      if processingParams.measuring.edgeDetection.enable then
+        print("edge-detection")
+        edgeDetectionGab, edgeDetectionHeight, edgeDetectionAngle, cornerPointA, cornerPointB = edgeDetection(pc, processingParams.measuring.edgeDetection.gradientThreshold, processingParams.measuring.edgeDetection.gabThreshold)
+        print(edgeDetectionGab, edgeDetectionHeight, edgeDetectionAngle)
+      end
+
+      local fixedPointHeight = nil
+
+      if processingParams.measuring.fixedPoint.enable then
+        fixedPointHeight = fixedPoint(pc, processingParams.measuring.fixedPoint.scanAngleA, processingParams.measuring.fixedPoint.scanAngleB)
+      end
+
+
+
+
+      -------------------------------------------------------------------------------------
+
+
+
       if processingParams.sensorType == 'MRS1000' then
         if beamCounter <= 4 then
           pcCollector:collect(pc, true)
@@ -291,8 +500,12 @@ local function handleOnNewProcessing(scan)
         end
       else
         if processingParams.viewerActive then
-          print("test")
           viewer:addPointCloud(pc, pcDeco, 'pc1')
+          --add viewer points
+          if cornerPointA and cornerPointB and processingParams.measuring.edgeDetection.enable then
+            viewer:addPoint(cornerPointA, shapeDecos.blue, "cornerPointA")
+            viewer:addPoint(cornerPointB, shapeDecos.lightBlue, "cornerPointB")
+          end
           viewer:present()
         end
       end
@@ -417,7 +630,7 @@ local function handleOnNewProcessingParameter(multiRemoteLiDARNo,parameter,value
       elseif parameter == 'AngleFilterStopAngle' then
         processingParams.filter.angleFilter.stopAngle = value
         _G.logger:info('instance ' ..lidarInstanceNumberString .. ' on new Anglefilter ' .. tostring(processingParams.filter.angleFilter.stopAngle))
-        filter.angleFilter:setThetaRange(processingParams.filter.angleFilter.startAngle, processingParams.filter.angleFilter.stopAngle)
+        filter.angleFilter:setThetaRange(math.rad(tonumber(processingParams.filter.angleFilter.startAngle)), math.rad(tonumber(processingParams.filter.angleFilter.stopAngle)))
       elseif parameter == 'AngleFilterEnable' then
         _G.logger:info('instance ' ..lidarInstanceNumberString .. ' on new Anglefilter enable state ' .. tostring(value))
         processingParams.filter.angleFilter.enable = value
@@ -439,11 +652,19 @@ local function handleOnNewProcessingParameter(multiRemoteLiDARNo,parameter,value
         processingParams.filter.meanFilter.beamsWidth = value
       --resolution halving
       elseif parameter == 'ResolutionHalvingEnabled' then
-        _G.logger:info('instance ' ..lidarInstanceNumberString .. ' on new resolution halving ' .. tostring(value))
+        _G.logger:info('instance ' ..lidarInstanceNumberString .. ' on resolution halving enabled ' .. tostring(value))
         processingParams.filter.resolutionHalving.enable = value
+      -- measure
+      elseif parameter == 'EdgeDetectionEnabled' then
+        _G.logger:info('instance ' ..lidarInstanceNumberString .. ' on edge detection enabled ' .. tostring(value))
+        processingParams.measuring.edgeDetection.enable = value
+      elseif parameter == 'EdgeDetectionGabThreshold' then
+        _G.logger:info('instance ' ..lidarInstanceNumberString .. ' on new edge detection gab threshold ' .. tostring(value))
+        processingParams.measuring.edgeDetection.gabThreshold = tonumber(value)
+      elseif parameter == 'EdgeDetectionGradientThreshold' then
+        _G.logger:info('instance ' ..lidarInstanceNumberString .. ' on new edge detection gradient threshold ' .. tostring(value))
+        processingParams.measuring.edgeDetection.gradientThreshold = tonumber(value)
       end
-
-
       if parameter == 'viewerActive' and value == false then
         viewer:clear()
         viewer:present()

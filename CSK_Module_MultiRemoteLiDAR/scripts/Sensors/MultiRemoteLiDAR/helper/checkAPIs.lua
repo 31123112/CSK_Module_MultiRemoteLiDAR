@@ -40,6 +40,7 @@ local function loadScannerAPIs()
   -- e.g.:
   PointCloud = require 'API.PointCloud'
   PointCloud.Collector = require 'API.PointCloud.Collector'
+  PointCloud.ShapeFitter = require 'API.PointCloud.ShapeFitter'
   Scan = require 'API.Scan'
   Scan.Provider = {}
   Scan.Provider.RemoteScanner = require 'API.Scan.Provider.RemoteScanner'

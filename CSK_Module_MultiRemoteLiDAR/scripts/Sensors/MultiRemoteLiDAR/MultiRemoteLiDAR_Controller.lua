@@ -19,7 +19,7 @@ tmrMultiRemoteLiDAR:setPeriodic(false)
 
 -- Timer to wait for sensor bootUp
 local tmrSensorBootUp = Timer.create()
-tmrSensorBootUp:setExpirationTime(25000)
+tmrSensorBootUp:setExpirationTime(15000)
 tmrSensorBootUp:setPeriodic(false)
 
 local multiRemoteLiDAR_Model -- Reference to model handle
@@ -574,6 +574,33 @@ local function setResolutionHalvingEnable (state)
 end
 Script.serveFunction('CSK_MultiRemoteLiDAR.setResolutionHalvingEnable', setResolutionHalvingEnable )
 
+------------------------------------------------------------------------------------------------
+--measuring
+---@param state bool
+local function setEdgeDetectionEnable (state)
+  _G.logger:info("Instance:".. tostring(selectedInstance) .. " new EdgeDetectionEnable :" .. tostring(state))
+  multiRemoteLiDAR_Instances[selectedInstance].parameters.measuring.edgeDetection.enable = state
+  Script.notifyEvent('MultiRemoteLiDAR_OnNewProcessingParameter', selectedInstance, 'EdgeDetectionEnabled', multiRemoteLiDAR_Instances[selectedInstance].parameters.measuring.edgeDetection.enable)
+end
+Script.serveFunction('CSK_MultiRemoteLiDAR.setEdgeDetectionEnable', setEdgeDetectionEnable )
+
+
+---@param value string
+local function setEdgeDetectionGabThreshold (value)
+  _G.logger:info("Instance:".. tostring(selectedInstance) .. " new EdgeDetectionGabThreshold :" .. tostring(value))
+  multiRemoteLiDAR_Instances[selectedInstance].parameters.measuring.edgeDetection.gabThreshold = value
+  Script.notifyEvent('MultiRemoteLiDAR_OnNewProcessingParameter', selectedInstance, 'EdgeDetectionGabThreshold', multiRemoteLiDAR_Instances[selectedInstance].parameters.measuring.edgeDetection.gabThreshold)
+end
+Script.serveFunction('CSK_MultiRemoteLiDAR.setEdgeDetectionGabThreshold', setEdgeDetectionGabThreshold )
+
+---@param value string
+local function setEdgeDetectionGradientThreshold (value)
+  _G.logger:info("Instance:".. tostring(selectedInstance) .. " new EdgeDetectionGabThreshold :" .. tostring(value))
+  multiRemoteLiDAR_Instances[selectedInstance].parameters.measuring.edgeDetection.gradientThreshold= value
+  Script.notifyEvent('MultiRemoteLiDAR_OnNewProcessingParameter', selectedInstance, 'EdgeDetectionGradientThreshold', multiRemoteLiDAR_Instances[selectedInstance].parameters.measuring.edgeDetection.gradientThreshold)
+end
+Script.serveFunction('CSK_MultiRemoteLiDAR.setEdgeDetectionGradientThreshold', setEdgeDetectionGradientThreshold )
+
 -- *****************************************************************
 -- Following function can be adapted for CSK_PersistentData module usage
 -- *****************************************************************
@@ -638,6 +665,21 @@ local function setupSensorsAfterBootUp()
     if multiRemoteLiDAR_Instances[i].parameterLoadOnReboot then
       CSK_MultiRemoteLiDAR.setSelectedInstance(i)
       CSK_MultiRemoteLiDAR.loadParameters()
+      -- load paramters to processing file
+      --filtering
+      Script.notifyEvent('MultiRemoteLiDAR_OnNewProcessingParameter', selectedInstance, 'AngleFilterEnable', multiRemoteLiDAR_Instances[selectedInstance].parameters.filtering.angleFilter.enable)
+      Script.notifyEvent('MultiRemoteLiDAR_OnNewProcessingParameter', selectedInstance, 'AngleFilterStartAngle', multiRemoteLiDAR_Instances[selectedInstance].parameters.filtering.angleFilter.startAngle)
+      Script.notifyEvent('MultiRemoteLiDAR_OnNewProcessingParameter', selectedInstance, 'AngleFilterStopAngle', multiRemoteLiDAR_Instances[selectedInstance].parameters.filtering.angleFilter.stopAngle)
+
+      Script.notifyEvent('MultiRemoteLiDAR_OnNewProcessingParameter', selectedInstance, 'MeanFilterScanDepthEnable', multiRemoteLiDAR_Instances[selectedInstance].parameters.filtering.meanFilter.enableScanDepth)
+      Script.notifyEvent('MultiRemoteLiDAR_OnNewProcessingParameter', selectedInstance, 'MeanFilterScanDepth', multiRemoteLiDAR_Instances[selectedInstance].parameters.meanFilterScansDepth)
+      Script.notifyEvent('MultiRemoteLiDAR_OnNewProcessingParameter', selectedInstance, 'MeanFilterBeamsWidthEnable', multiRemoteLiDAR_Instances[selectedInstance].parameters.filtering.enableBeamsWidth)
+      Script.notifyEvent('MultiRemoteLiDAR_OnNewProcessingParameter', selectedInstance, 'ResolutionHalvingEnabled', multiRemoteLiDAR_Instances[selectedInstance].parameters.filtering.resolutionHalving.enable)
+      --measuring
+      Script.notifyEvent('MultiRemoteLiDAR_OnNewProcessingParameter', selectedInstance, 'EdgeDetectionEnabled', multiRemoteLiDAR_Instances[selectedInstance].parameters.measuring.edgeDetection.enable)
+      Script.notifyEvent('MultiRemoteLiDAR_OnNewProcessingParameter', selectedInstance, 'EdgeDetectionGabThreshold', multiRemoteLiDAR_Instances[selectedInstance].parameters.measuring.edgeDetection.gabThreshold)
+      Script.notifyEvent('MultiRemoteLiDAR_OnNewProcessingParameter', selectedInstance, 'EdgeDetectionGradientThreshold', multiRemoteLiDAR_Instances[selectedInstance].parameters.measuring.edgeDetection.gradientThreshold)
+
       CSK_MultiRemoteLiDAR.startLiDARSensor()
       isOneConnected = true
     end

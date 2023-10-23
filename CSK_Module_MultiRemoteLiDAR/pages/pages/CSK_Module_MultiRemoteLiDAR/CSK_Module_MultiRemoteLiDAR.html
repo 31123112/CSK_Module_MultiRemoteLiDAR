@@ -486,6 +486,10 @@
 												<crown-on property="checked"
 													crown-event="CSK_MultiRemoteLiDAR/OnNewStatusEdgeDetection">
 												</crown-on>
+												<crown-set event="change"
+													crown-function="CSK_MultiRemoteLiDAR/setEdgeDetectionEnable"
+													protocol="crownMSGPACK" crown-path="state">
+												</crown-set>
 												</davinci-checkbox>
 												</layout-column>
 												<layout-column id="ColumnLayout32" style="align-items: stretch">
@@ -499,6 +503,10 @@
 												<crown-on property="value"
 													crown-event="CSK_MultiRemoteLiDAR/OnNewValueGabThreshold">
 												</crown-on>
+												<crown-set event="change"
+													crown-function="CSK_MultiRemoteLiDAR/setEdgeDetectionGabThreshold"
+													protocol="crownMSGPACK" crown-path="value">
+												</crown-set>
 												</davinci-number-input>
 												</layout-column>
 												<layout-column id="ColumnLayout35" style="align-items: stretch">
@@ -508,6 +516,10 @@
 												<crown-on property="value"
 													crown-event="CSK_MultiRemoteLiDAR/OnNewValueGradientThreshold">
 												</crown-on>
+												<crown-set event="change"
+													crown-function="CSK_MultiRemoteLiDAR/setEdgeDetectionGradientThreshold"
+													protocol="crownMSGPACK" crown-path="value">
+												</crown-set>
 												</davinci-number-input>
 												</layout-column>
 												</layout-row>
